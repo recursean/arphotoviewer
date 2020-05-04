@@ -22,7 +22,7 @@ class PhotoViewerScene {
     init() {
         frame = SCNBox(width: 0.5, height: 1.0, length: 0.1, chamferRadius: 1.0)
         
-        setImage("art.scnassets/arnolfini.jpg")
+        //setImageString("art.scnassets/arnolfini.jpg")
         
         scene = self.initializeScene()
     }
@@ -88,7 +88,16 @@ class PhotoViewerScene {
     /**
      Set the frame material to be the specified image.
      */
-    func setImage(_ image: String) {
+    func setImage(_ image: UIImage) {
+        self.image = image
+        
+        frame!.firstMaterial?.diffuse.contents = self.image
+    }
+    
+    /**
+     Used for debug
+     */
+    func setImageString(_ image: String) {
         self.image = UIImage(named: image)
         
         frame!.firstMaterial?.diffuse.contents = self.image
