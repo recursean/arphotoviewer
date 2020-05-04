@@ -85,7 +85,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     let transform = camera.transform * translation
                     let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
                     
-                    sceneController.updatePlacerPosition(position: position, sceneView.pointOfView!)
+                    sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
                 }
             }
         }
@@ -104,7 +104,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 
                 let transform = camera.transform * translation
                 let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-                sceneController.updatePlacerPosition(position: position, sceneView.pointOfView!)
+                sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
                 
                 impact.impactOccurred()
                 isPlacerSet = true

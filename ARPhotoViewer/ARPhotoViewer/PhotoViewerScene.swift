@@ -11,16 +11,16 @@ import SceneKit
 
 class PhotoViewerScene {
     var scene: SCNScene?
-    var placer: SCNBox?
-    var placerAdded = false
+    var frame: SCNBox?
+    var frameAdded = false
     var prevContainerNode: SCNNode?
     var image: UIImage?
     
     /**
-     Create box "placer" and init scene
+     Create box "frame" and init scene
      */
     init() {
-        placer = SCNBox(width: 0.5, height: 1.0, length: 0.1, chamferRadius: 1.0)
+        frame = SCNBox(width: 0.5, height: 1.0, length: 0.1, chamferRadius: 1.0)
         
         setImage("art.scnassets/arnolfini.jpg")
         
@@ -61,22 +61,22 @@ class PhotoViewerScene {
     }
     
     /**
-     Update position of placer
+     Update position of frame
      Called:
-        - every frame when placer is not placed yet
-        - when screen is tapped to place placer
+        - every frame when frame is not placed yet
+        - when screen is tapped to place frame
      */
-    func updatePlacerPosition(position: SCNVector3, _ pov: SCNNode) {
+    func updateFramePosition(position: SCNVector3, _ pov: SCNNode) {
         guard let scene = self.scene else { return }
         
-        let containerNode = SCNNode(geometry: placer)
+        let containerNode = SCNNode(geometry: frame)
         
         containerNode.orientation = pov.orientation
         containerNode.position = position
         
-        if(!placerAdded) {
+        if(!frameAdded) {
             scene.rootNode.addChildNode(containerNode)
-            placerAdded = true
+            frameAdded = true
         }
         else {
             scene.rootNode.replaceChildNode(prevContainerNode!, with: containerNode)
@@ -85,9 +85,12 @@ class PhotoViewerScene {
         prevContainerNode = containerNode
     }
     
+    /**
+     Set the frame material to be the specified image.
+     */
     func setImage(_ image: String) {
         self.image = UIImage(named: image)
         
-        placer!.firstMaterial?.diffuse.contents = self.image
+        frame!.firstMaterial?.diffuse.contents = self.image
     }
 }
