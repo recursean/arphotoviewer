@@ -14,12 +14,15 @@ class PhotoViewerScene {
     var placer: SCNBox?
     var placerAdded = false
     var prevContainerNode: SCNNode?
+    var image: UIImage?
     
     /**
      Create box "placer" and init scene
      */
     init() {
         placer = SCNBox(width: 0.5, height: 1.0, length: 0.1, chamferRadius: 1.0)
+        
+        setImage("art.scnassets/arnolfini.jpg")
         
         scene = self.initializeScene()
     }
@@ -70,7 +73,7 @@ class PhotoViewerScene {
         
         containerNode.orientation = pov.orientation
         containerNode.position = position
-
+        
         if(!placerAdded) {
             scene.rootNode.addChildNode(containerNode)
             placerAdded = true
@@ -80,5 +83,11 @@ class PhotoViewerScene {
         }
         
         prevContainerNode = containerNode
+    }
+    
+    func setImage(_ image: String) {
+        self.image = UIImage(named: image)
+        
+        placer!.firstMaterial?.diffuse.contents = self.image
     }
 }

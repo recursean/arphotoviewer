@@ -60,6 +60,7 @@
 		DD2B035C245F97C6002F9FA8 /* ARPhotoViewer */ = {
 			isa = PBXGroup;
 			children = (
+				DD2B037B245FC460002F9FA8 /* Resources */,
 				DD2B0373245F9C04002F9FA8 /* Extensions */,
 				DD2B035D245F97C6002F9FA8 /* AppDelegate.swift */,
 				DD2B035F245F97C6002F9FA8 /* art.scnassets */,
@@ -79,6 +80,13 @@
 				DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		DD2B037B245FC460002F9FA8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
