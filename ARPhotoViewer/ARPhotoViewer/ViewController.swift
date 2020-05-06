@@ -14,6 +14,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
 
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var addImage: UIImageView!
+    @IBOutlet weak var distanceSlider: UISlider!
+    @IBOutlet weak var distanceLabel: UILabel!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -21,6 +23,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     var isFrameSet: Bool = false
     let impact = UIImpactFeedbackGenerator()
     var imagePicker = UIImagePickerController()
+    var zFrameOffset: Float = -0.9144
+    let numFmt = NumberFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +40,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             sceneView.scene = scene
             //sceneView.debugOptions.insert(.showWorldOrigin)
         }
+        
+        // rotate slider
+        distanceSlider.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
+        
+        // rotate min slider image -- turns image black for some reason
+        distanceSlider.minimumValueImage = distanceSlider.minimumValueImage?.rotate(radians: -CGFloat.pi/2)
+        
+        updateDistanceLabel(distanceSlider.value)
+        zFrameOffset = -1.0 * distanceSlider.value
         
         // gesture recognizers
         let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapScreen))
@@ -55,6 +68,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        numFmt.numberStyle = .decimal
+        numFmt.maximumSignificantDigits = 2
         
         // Create a session configuration
         let config = ARWorldTrackingConfiguration()
@@ -96,7 +112,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             if(showFrame && !isFrameSet){
                 if let camera = sceneView.session.currentFrame?.camera {
                     var translation = matrix_identity_float4x4
-                    translation.columns.3.z = -1.0
+                    translation.columns.3.z = zFrameOffset
 
                     let transform = camera.transform * translation
                     let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
@@ -116,7 +132,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         if(didInitializeScene && showFrame && !isFrameSet) {
             if let camera = sceneView.session.currentFrame?.camera {
                 var translation = matrix_identity_float4x4
-                translation.columns.3.z = -1.0
+                translation.columns.3.z = zFrameOffset
                 
                 let transform = camera.transform * translation
                 let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
@@ -125,6 +141,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 impact.impactOccurred()
                 isFrameSet = true
                 showFrame = false
+                distanceLabel.isHidden = true
             }
         }
     }
@@ -209,6 +226,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             sceneController.setImage(image.fixOrientation())
             showFrame = true
+            distanceLabel.isHidden = false
         }
     }
+    
+    /**
+     Called when distanceSlider value has changed
+     */
+    @IBAction func distanceValueChanged(_ sender: UISlider) {
+        zFrameOffset = -1.0 * distanceSlider.value
+        updateDistanceLabel(distanceSlider.value)
+    }
+    
+    /**
+     Convert distanceSlider value to feet for label
+     */
+    func updateDistanceLabel(_ value: Float) {
+        distanceLabel.text! = "\(numFmt.string(from: NSNumber(value: value * 3.28084))!)ft away"
+    }
+    
 }
