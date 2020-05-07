@@ -18,6 +18,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var sizeSlider: UISlider!
     @IBOutlet weak var sizeLabel: UILabel!
+    @IBOutlet weak var infoImage: UIImageView!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -27,6 +28,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     var imagePicker = UIImagePickerController()
     var zFrameOffset: Float = -0.9144
     let numFmt = NumberFormatter()
+    var isUIHidden = false
+    
+    let appTitle = "AR Photo Viewer"
+    let appVersion = "Arnolfini 1.0"
     
     // meters to feet
     let mtof: Float = 3.28084
@@ -69,6 +74,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let addImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.addImageTapped))
         addImageTapRecognizer.name = "tap"
         addImage.addGestureRecognizer(addImageTapRecognizer)
+        
+        let infoImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.infoImageTapped))
+        infoImageTapRecognizer.name = "tap"
+        infoImage.addGestureRecognizer(infoImageTapRecognizer)
         
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didDoubleTapScreen))
         doubleTapRecognizer.name = "doubleTap"
@@ -137,17 +146,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Place placer node as long as it hasn't been set already
      */
     @objc func didTapScreen(recognizer: UITapGestureRecognizer) {
-        if(didInitializeScene && showFrame && !isFrameSet) {
-            if let camera = sceneView.session.currentFrame?.camera {
-                var translation = matrix_identity_float4x4
-                translation.columns.3.z = zFrameOffset
-                
-                let transform = camera.transform * translation
-                let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-                sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
-                
-                impact.impactOccurred()
-                prepareForSet()
+        if(didInitializeScene) {
+            if(showFrame && !isFrameSet) {
+                if let camera = sceneView.session.currentFrame?.camera {
+                    var translation = matrix_identity_float4x4
+                    translation.columns.3.z = zFrameOffset
+                    
+                    let transform = camera.transform * translation
+                    let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+                    sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
+                    
+                    impact.impactOccurred()
+                    prepareForSet()
+                }
+            }
+            else {
+                isUIHidden = !isUIHidden
+                toggleUI(isUIHidden)
             }
         }
     }
@@ -160,6 +175,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             impact.impactOccurred()
             prepareForFrame()
         }
+    }
+    
+    /**
+     Toggles the UI for viewing pleasure.
+     */
+    func toggleUI(_ hide: Bool) {
+        addImage.isHidden = hide
+        infoImage.isHidden = hide
     }
     
     /**
@@ -257,6 +280,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             sceneController.setImage(image.fixOrientation())
             prepareForFrame()
         }
+    }
+    
+    /**
+     Displays info popup.
+     */
+    @IBAction func infoImageTapped(_ sender: UITapGestureRecognizer) {
+        let alert = UIAlertController(title: appTitle, message: "\(appVersion)\nCopyright © Sean McShane", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
+        
+        self.present(alert, animated: true)
     }
     
     /**
