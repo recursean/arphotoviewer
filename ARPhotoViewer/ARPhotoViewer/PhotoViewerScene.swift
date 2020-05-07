@@ -15,16 +15,37 @@ class PhotoViewerScene {
     var frameAdded = false
     var prevContainerNode: SCNNode?
     var image: UIImage?
+    var aspect: Float = 2.0
+    
+    // meters to feet
+    let mtof: Float = 3.28084
     
     /**
      Create box "frame" and init scene
      */
     init() {
-        frame = SCNBox(width: 0.5, height: 1.0, length: 0.1, chamferRadius: 1.0)
+        frame = SCNBox(width: 0.4, height: 0.8, length: 0.1, chamferRadius: 1.0)
         
         //setImageString("art.scnassets/arnolfini.jpg")
         
         scene = self.initializeScene()
+    }
+    
+    /**
+     Update image size with specified values.
+     */
+    func updateFrameSize(width: CGFloat, height: CGFloat, length: CGFloat) {
+        frame?.width = width
+        frame?.height = height
+        frame?.length = length
+    }
+    
+    /**
+     Update image size. Either increase or decrease by certain amount.
+     */
+    func updateFrameSize(_ value: Float) {
+        frame?.width = CGFloat(value)
+        frame?.height = CGFloat(value * aspect)
     }
     
     /**
@@ -101,5 +122,12 @@ class PhotoViewerScene {
         self.image = UIImage(named: image)
         
         frame!.firstMaterial?.diffuse.contents = self.image
+    }
+    
+    /**
+     Returns width, height, and length of frame.
+     */
+    func getImageDimensions() -> [CGFloat] {
+        return [frame!.width, frame!.height, frame!.length]
     }
 }

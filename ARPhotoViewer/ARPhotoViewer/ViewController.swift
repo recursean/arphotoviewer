@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var distanceSlider: UISlider!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var sizeSlider: UISlider!
+    @IBOutlet weak var sizeLabel: UILabel!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -26,6 +27,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     var imagePicker = UIImagePickerController()
     var zFrameOffset: Float = -0.9144
     let numFmt = NumberFormatter()
+    
+    // meters to feet
+    let mtof: Float = 3.28084
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +46,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             //sceneView.debugOptions.insert(.showWorldOrigin)
         }
         
+        numFmt.numberStyle = .decimal
+        numFmt.maximumSignificantDigits = 2
+        
         // rotate slider
         distanceSlider.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
         
@@ -51,6 +58,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         updateDistanceLabel(distanceSlider.value)
         zFrameOffset = -1.0 * distanceSlider.value
+        
+        updateSizeLabel()
         
         // gesture recognizers
         let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapScreen))
@@ -70,9 +79,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        numFmt.numberStyle = .decimal
-        numFmt.maximumSignificantDigits = 2
         
         // Create a session configuration
         let config = ARWorldTrackingConfiguration()
@@ -166,6 +172,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         distanceSlider.isHidden = true
         addImage.isHidden = false
         sizeSlider.isHidden = true
+        sizeLabel.isHidden = true
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -177,6 +184,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         distanceSlider.isHidden = false
         addImage.isHidden = true
         sizeSlider.isHidden = false
+        sizeLabel.isHidden = false
     }
     
     /**
@@ -252,7 +260,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
-     Called when distanceSlider value has changed
+     Called when distanceSlider value has changed.
      */
     @IBAction func distanceValueChanged(_ sender: UISlider) {
         zFrameOffset = -1.0 * distanceSlider.value
@@ -263,7 +271,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Convert distanceSlider value to feet for label
      */
     func updateDistanceLabel(_ value: Float) {
-        distanceLabel.text! = "\(numFmt.string(from: NSNumber(value: value * 3.28084))!)ft away"
+        distanceLabel.text! = "\(numFmt.string(from: NSNumber(value: value * mtof))!)ft away"
     }
     
+    /**
+     Called when sizeSlider value has changed.
+     */
+    @IBAction func sizeValueChanged(_ sender: UISlider) {
+        sceneController.updateFrameSize(sizeSlider.value)
+
+        updateSizeLabel()
+    }
+    
+    /**
+     Convert sizeSlider value to feet for label
+     */
+    func updateSizeLabel() {
+        let dims = sceneController.getImageDimensions()
+        
+        sizeLabel.text! = "\(numFmt.string(from: NSNumber(value: Float(dims[0]) * mtof))!)ft w X \(numFmt.string(from: NSNumber(value: Float(dims[1]) * mtof))!)ft h"
+    }
 }

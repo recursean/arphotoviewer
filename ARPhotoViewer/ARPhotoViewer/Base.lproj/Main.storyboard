@@ -41,17 +41,27 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" minimumValueImage="minus.circle.fill" catalog="system" maximumValueImage="plus.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="VZN-BZ-MKG">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.10000000000000001" maxValue="4" minimumValueImage="minus.circle.fill" catalog="system" maximumValueImage="plus.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="VZN-BZ-MKG">
                                 <rect key="frame" x="62" y="812" width="290" height="31"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="minimumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <action selector="sizeValueChanged:" destination="BV1-FR-VrT" eventType="valueChanged" id="57x-Z6-Xro"/>
+                                </connections>
                             </slider>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LDD-aX-isQ">
+                                <rect key="frame" x="186" y="95" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="width" secondItem="U0K-SW-4ec" secondAttribute="height" multiplier="0.5" id="8zT-aJ-AXU"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="9u7-4L-Xsu"/>
+                            <constraint firstItem="LDD-aX-isQ" firstAttribute="top" secondItem="csf-eu-qgV" secondAttribute="bottom" constant="10" id="AGt-Lw-Ac3"/>
                             <constraint firstItem="VZN-BZ-MKG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="BEu-aj-Dtg"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="Gi3-ep-5nH"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
@@ -60,6 +70,7 @@
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="VZN-BZ-MKG" secondAttribute="bottom" constant="20" id="Y35-xZ-VoJ"/>
+                            <constraint firstItem="LDD-aX-isQ" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dt8-bb-RbV"/>
                             <constraint firstAttribute="trailing" secondItem="kiR-1q-klE" secondAttribute="centerX" constant="20" id="fKG-2m-5df"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
                         </constraints>
@@ -70,6 +81,7 @@
                         <outlet property="distanceLabel" destination="csf-eu-qgV" id="FS8-Lj-VNT"/>
                         <outlet property="distanceSlider" destination="kiR-1q-klE" id="2Xf-2U-2t2"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="MMN-Kn-ZOV"/>
+                        <outlet property="sizeLabel" destination="LDD-aX-isQ" id="DiI-Mc-7ad"/>
                         <outlet property="sizeSlider" destination="VZN-BZ-MKG" id="RtV-wd-DDr"/>
                     </connections>
                 </viewController>
