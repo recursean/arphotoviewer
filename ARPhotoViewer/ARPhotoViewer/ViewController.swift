@@ -195,10 +195,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let alert: UIAlertController?
         
         if(UIDevice.current.userInterfaceIdiom == .pad) {
-            alert = UIAlertController(title: "Image Selection", message: "Take or select an image to display", preferredStyle: .alert)
+            alert = UIAlertController(title: "Image Selection", message: "Take or select an image to display. This app does not store or share your images.", preferredStyle: .alert)
         }
         else {
-            alert = UIAlertController(title: "Image Selection", message: "Take or select an image to display", preferredStyle: .actionSheet)
+            alert = UIAlertController(title: "Image Selection", message: "Take or select an image to display. This app does not store or share your images.", preferredStyle: .actionSheet)
         }
         
         alert!.addAction(UIAlertAction(title: "Open back camera", style: .default, handler: {
