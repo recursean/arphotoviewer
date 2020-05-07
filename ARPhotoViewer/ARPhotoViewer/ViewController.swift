@@ -16,6 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var addImage: UIImageView!
     @IBOutlet weak var distanceSlider: UISlider!
     @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var sizeSlider: UISlider!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -46,6 +47,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         // rotate min slider image -- turns image black for some reason
         distanceSlider.minimumValueImage = distanceSlider.minimumValueImage?.rotate(radians: -CGFloat.pi/2)
+        distanceSlider.minimumValueImage = distanceSlider.minimumValueImage?.withTintColor(.white)
         
         updateDistanceLabel(distanceSlider.value)
         zFrameOffset = -1.0 * distanceSlider.value
@@ -139,22 +141,42 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
                 
                 impact.impactOccurred()
-                isFrameSet = true
-                showFrame = false
-                distanceLabel.isHidden = true
+                prepareForSet()
             }
         }
     }
-    
+
     /**
      Pick up placer node if placed and start to follow user's camera again
      */
     @objc func didDoubleTapScreen(recognizer: UITapGestureRecognizer) {
         if(didInitializeScene && isFrameSet) {
             impact.impactOccurred()
-            isFrameSet = false
-            showFrame =  true
+            prepareForFrame()
         }
+    }
+    
+    /**
+     Set flags before frame gets set in place
+     */
+    func prepareForSet() {
+        isFrameSet = true
+        showFrame = false
+        distanceLabel.isHidden = true
+        distanceSlider.isHidden = true
+        addImage.isHidden = false
+        sizeSlider.isHidden = true
+    }
+    /**
+     Set flags before frame begins to follow camera after double tap
+     */
+    func prepareForFrame() {
+        isFrameSet = false
+        showFrame =  true
+        distanceLabel.isHidden = false
+        distanceSlider.isHidden = false
+        addImage.isHidden = true
+        sizeSlider.isHidden = false
     }
     
     /**
@@ -225,8 +247,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             sceneController.setImage(image.fixOrientation())
-            showFrame = true
-            distanceLabel.isHidden = false
+            prepareForFrame()
         }
     }
     

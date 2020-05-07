@@ -18,7 +18,7 @@
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrB-h1-WRS">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                             </arscnView>
-                            <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="plus.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="5bI-Xw-XrL">
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="plus.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="5bI-Xw-XrL">
                                 <rect key="frame" x="87" y="734" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -26,10 +26,10 @@
                                     <accessibilityTraits key="traits" button="YES" image="YES"/>
                                 </accessibility>
                             </imageView>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.91439999999999999" minValue="0.5" maxValue="7.6200000000000001" minimumValueImage="minus.circle" catalog="system" maximumValueImage="plus.circle" translatesAutoresizingMaskIntoConstraints="NO" id="kiR-1q-klE">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.91439999999999999" minValue="0.5" maxValue="7.6200000000000001" minimumValueImage="minus.circle.fill" catalog="system" maximumValueImage="plus.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="kiR-1q-klE">
                                 <rect key="frame" x="168" y="433" width="452" height="31"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="minimumTrackTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="minimumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="distanceValueChanged:" destination="BV1-FR-VrT" eventType="valueChanged" id="cdz-2W-OZ2"/>
@@ -41,16 +41,25 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" minimumValueImage="minus.circle.fill" catalog="system" maximumValueImage="plus.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="VZN-BZ-MKG">
+                                <rect key="frame" x="62" y="812" width="290" height="31"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="minimumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="width" secondItem="U0K-SW-4ec" secondAttribute="height" multiplier="0.5" id="8zT-aJ-AXU"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="9u7-4L-Xsu"/>
+                            <constraint firstItem="VZN-BZ-MKG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="BEu-aj-Dtg"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="Gi3-ep-5nH"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="T5c-WL-l5h"/>
+                            <constraint firstItem="VZN-BZ-MKG" firstAttribute="width" secondItem="fQZ-KI-GVf" secondAttribute="height" multiplier="0.35" id="Uus-2l-DkV"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="VZN-BZ-MKG" secondAttribute="bottom" constant="20" id="Y35-xZ-VoJ"/>
                             <constraint firstAttribute="trailing" secondItem="kiR-1q-klE" secondAttribute="centerX" constant="20" id="fKG-2m-5df"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
                         </constraints>
@@ -61,6 +70,7 @@
                         <outlet property="distanceLabel" destination="csf-eu-qgV" id="FS8-Lj-VNT"/>
                         <outlet property="distanceSlider" destination="kiR-1q-klE" id="2Xf-2U-2t2"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="MMN-Kn-ZOV"/>
+                        <outlet property="sizeSlider" destination="VZN-BZ-MKG" id="RtV-wd-DDr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
@@ -69,7 +79,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="minus.circle" catalog="system" width="128" height="121"/>
-        <image name="plus.circle" catalog="system" width="128" height="121"/>
+        <image name="minus.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="plus.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>
