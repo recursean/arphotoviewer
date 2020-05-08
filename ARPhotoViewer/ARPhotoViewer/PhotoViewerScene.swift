@@ -12,10 +12,11 @@ import SceneKit
 class PhotoViewerScene {
     var scene: SCNScene?
     var frame: SCNBox?
-    var frameAdded = false
-    var prevContainerNode: SCNNode?
+    var frameContainer: SCNNode?
     var image: UIImage?
     var aspect: Float = 2.0
+    var defaultRotation = SCNVector4(0, 0, 0, 0)
+    var updateRotation = false
     
     // meters to feet
     let mtof: Float = 3.28084
@@ -24,7 +25,8 @@ class PhotoViewerScene {
      Create box "frame" and init scene
      */
     init() {
-        frame = SCNBox(width: 0.4, height: 0.8, length: 0.1, chamferRadius: 1.0)
+        frame = SCNBox(width: 0.4, height: 0.8, length: 0.05, chamferRadius: 0.0)
+        frameContainer = SCNNode(geometry: frame)
         
         //setImageString("art.scnassets/arnolfini.jpg")
         
@@ -88,22 +90,30 @@ class PhotoViewerScene {
         - when screen is tapped to place frame
      */
     func updateFramePosition(position: SCNVector3, _ pov: SCNNode) {
+        frameContainer!.orientation = pov.orientation
+        frameContainer!.position = position
+        
+        if(updateRotation) {
+           frameContainer!.rotation = defaultRotation
+        }
+    }
+    
+    /**
+     Sets if rotation should be updated each frame
+     */
+    func toggleUpdateRotation() -> Bool {
+        updateRotation = !updateRotation
+        
+        return updateRotation
+    }
+    
+    /**
+     Adds frame to scene
+     */
+    func addFrame() {
         guard let scene = self.scene else { return }
         
-        let containerNode = SCNNode(geometry: frame)
-        
-        containerNode.orientation = pov.orientation
-        containerNode.position = position
-        
-        if(!frameAdded) {
-            scene.rootNode.addChildNode(containerNode)
-            frameAdded = true
-        }
-        else {
-            scene.rootNode.replaceChildNode(prevContainerNode!, with: containerNode)
-        }
-        
-        prevContainerNode = containerNode
+        scene.rootNode.addChildNode(frameContainer!)
     }
     
     /**
@@ -129,5 +139,10 @@ class PhotoViewerScene {
      */
     func getImageDimensions() -> [CGFloat] {
         return [frame!.width, frame!.height, frame!.length]
+    }
+    
+    func rotateFrame(_ rotation: SCNVector4) {
+        print("rotating")
+        //currentRotation = rotation
     }
 }

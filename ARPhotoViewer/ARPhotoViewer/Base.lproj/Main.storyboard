@@ -64,25 +64,53 @@
                                     <constraint firstAttribute="height" constant="40" id="f9G-jQ-Jqs"/>
                                 </constraints>
                             </imageView>
+                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrowshape.turn.up.right.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="wMj-0O-ASL">
+                                <rect key="frame" x="274" y="762.5" width="40" height="39"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="2f2-8l-jCp"/>
+                                    <constraint firstAttribute="height" constant="40" id="deA-A3-rLt"/>
+                                </constraints>
+                            </imageView>
+                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="WIp-Wu-bHb">
+                                <rect key="frame" x="187" y="762.5" width="40" height="38.5"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="0gu-02-Wf1"/>
+                                    <constraint firstAttribute="width" constant="40" id="djJ-Rf-bFG"/>
+                                </constraints>
+                            </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to place" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ceX-TW-1YG">
+                                <rect key="frame" x="156.5" y="136" width="101.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="17"/>
+                                <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="wMj-0O-ASL" secondAttribute="bottom" constant="60" id="6IE-Ji-Sh7"/>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="width" secondItem="U0K-SW-4ec" secondAttribute="height" multiplier="0.5" id="8zT-aJ-AXU"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="9u7-4L-Xsu"/>
                             <constraint firstItem="LDD-aX-isQ" firstAttribute="top" secondItem="csf-eu-qgV" secondAttribute="bottom" constant="10" id="AGt-Lw-Ac3"/>
+                            <constraint firstItem="ceX-TW-1YG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="API-7b-4zx"/>
                             <constraint firstItem="VZN-BZ-MKG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="BEu-aj-Dtg"/>
                             <constraint firstItem="72H-dR-osa" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="DJ0-QM-OMc"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="Gi3-ep-5nH"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="72H-dR-osa" secondAttribute="trailing" constant="20" id="Lcl-kX-5Xg"/>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="T5c-WL-l5h"/>
+                            <constraint firstItem="ceX-TW-1YG" firstAttribute="top" secondItem="LDD-aX-isQ" secondAttribute="bottom" constant="20" id="TaY-Af-hf9"/>
                             <constraint firstItem="VZN-BZ-MKG" firstAttribute="width" secondItem="fQZ-KI-GVf" secondAttribute="height" multiplier="0.35" id="Uus-2l-DkV"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="VZN-BZ-MKG" secondAttribute="bottom" constant="20" id="Y35-xZ-VoJ"/>
+                            <constraint firstItem="WIp-Wu-bHb" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dot-82-0VW"/>
                             <constraint firstItem="LDD-aX-isQ" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dt8-bb-RbV"/>
                             <constraint firstAttribute="trailing" secondItem="kiR-1q-klE" secondAttribute="centerX" constant="20" id="fKG-2m-5df"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="wMj-0O-ASL" secondAttribute="trailing" constant="100" id="hH3-oR-hwE"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="WIp-Wu-bHb" secondAttribute="bottom" constant="60" id="zRK-PV-FXv"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
@@ -91,9 +119,12 @@
                         <outlet property="distanceLabel" destination="csf-eu-qgV" id="FS8-Lj-VNT"/>
                         <outlet property="distanceSlider" destination="kiR-1q-klE" id="2Xf-2U-2t2"/>
                         <outlet property="infoImage" destination="72H-dR-osa" id="8YV-Yf-4Qb"/>
+                        <outlet property="lockImage" destination="WIp-Wu-bHb" id="lqj-Al-AdH"/>
+                        <outlet property="rotateRightImage" destination="wMj-0O-ASL" id="2ZS-qh-a6s"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="MMN-Kn-ZOV"/>
                         <outlet property="sizeLabel" destination="LDD-aX-isQ" id="DiI-Mc-7ad"/>
                         <outlet property="sizeSlider" destination="VZN-BZ-MKG" id="RtV-wd-DDr"/>
+                        <outlet property="tapToPlaceLabel" destination="ceX-TW-1YG" id="BgO-Lp-87s"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
@@ -102,7 +133,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrowshape.turn.up.right.circle.fill" catalog="system" width="128" height="121"/>
         <image name="info.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="lock.fill" catalog="system" width="128" height="128"/>
         <image name="minus.circle.fill" catalog="system" width="128" height="121"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="121"/>
     </resources>

@@ -19,6 +19,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var sizeSlider: UISlider!
     @IBOutlet weak var sizeLabel: UILabel!
     @IBOutlet weak var infoImage: UIImageView!
+    @IBOutlet weak var rotateRightImage: UIImageView!
+    @IBOutlet weak var lockImage: UIImageView!
+    @IBOutlet weak var tapToPlaceLabel: UILabel!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -29,6 +32,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     var zFrameOffset: Float = -0.9144
     let numFmt = NumberFormatter()
     var isUIHidden = false
+    var blink = false
     
     let appTitle = "AR Photo Viewer"
     let appVersion = "Arnolfini 1.0"
@@ -78,6 +82,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let infoImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.infoImageTapped))
         infoImageTapRecognizer.name = "tap"
         infoImage.addGestureRecognizer(infoImageTapRecognizer)
+        
+        let rotateRightImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateRightImageTapped))
+        rotateRightImageTapRecognizer.name = "tap"
+        rotateRightImage.addGestureRecognizer(rotateRightImageTapRecognizer)
+        
+        let lockImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.lockImageTapped))
+        lockImageTapRecognizer.name = "tap"
+        lockImage.addGestureRecognizer(lockImageTapRecognizer)
         
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didDoubleTapScreen))
         doubleTapRecognizer.name = "doubleTap"
@@ -196,6 +208,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         addImage.isHidden = false
         sizeSlider.isHidden = true
         sizeLabel.isHidden = true
+        rotateRightImage.isHidden = true
+        lockImage.isHidden = true
+        tapToPlaceLabel.isHidden = true
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -208,6 +223,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         addImage.isHidden = true
         sizeSlider.isHidden = false
         sizeLabel.isHidden = false
+        rotateRightImage.isHidden = false
+        lockImage.isHidden = false
+        tapToPlaceLabel.isHidden = false
+        startBlinkTimer()
     }
     
     /**
@@ -216,6 +235,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBAction func addImageTapped(_ sender: UITapGestureRecognizer) {
         
         let alert: UIAlertController?
+        
+        impact.impactOccurred()
         
         if(UIDevice.current.userInterfaceIdiom == .pad) {
             alert = UIAlertController(title: "Image Selection", message: "Take or select an image to display. This app does not store or share your images.", preferredStyle: .alert)
@@ -278,19 +299,82 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             sceneController.setImage(image.fixOrientation())
+            sceneController.addFrame()
             prepareForFrame()
         }
     }
     
     /**
+     Starts to timer for blinking the help label.
+     */
+    func startBlinkTimer() {
+        Timer.scheduledTimer(withTimeInterval: 1.25, repeats: true) { timer in
+            if(self.showFrame) {
+                self.blinkLabel()
+            }
+            
+            else {
+                timer.invalidate()
+            }
+        }
+    }
+    
+    /**
+     Animates the blinking of help label.
+     */
+    @objc func blinkLabel() {
+        var newAlpha: CGFloat = 0.0
+        
+        if(tapToPlaceLabel.alpha == 0.0) {
+            newAlpha = 1.0
+        }
+        
+        else {
+            newAlpha = 0.0
+        }
+        
+        UIView.animate(withDuration: 1.25, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
+            self.tapToPlaceLabel.alpha = newAlpha
+        }, completion: nil)
+    }
+    
+    
+    /**
      Displays info popup.
      */
     @IBAction func infoImageTapped(_ sender: UITapGestureRecognizer) {
+        impact.impactOccurred()
+        
         let alert = UIAlertController(title: appTitle, message: "\(appVersion)\nCopyright © Sean McShane", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
         
         self.present(alert, animated: true)
+    }
+    
+    /**
+     Rotates frame right.
+     */
+    @IBAction func rotateRightImageTapped(_ sender: UITapGestureRecognizer) {
+        impact.impactOccurred()
+        
+        sceneController.rotateFrame(SCNVector4(0, 0, 1.0, 0))
+    }
+    
+    /**
+     Sets frame to be rotated every frame
+     */
+    @IBAction func lockImageTapped(_ sender: UITapGestureRecognizer) {
+        impact.impactOccurred()
+        
+        let rotate = sceneController.toggleUpdateRotation()
+        
+        if(rotate) {
+            lockImage.image = UIImage(systemName: "lock.open.fill")
+        }
+        else {
+            lockImage.image = UIImage(systemName: "lock.fill")
+        }
     }
     
     /**
