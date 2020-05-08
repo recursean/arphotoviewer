@@ -20,6 +20,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var sizeLabel: UILabel!
     @IBOutlet weak var infoImage: UIImageView!
     @IBOutlet weak var rotateRightImage: UIImageView!
+    @IBOutlet weak var rotateLeftImage: UIImageView!
     @IBOutlet weak var lockImage: UIImageView!
     @IBOutlet weak var tapToPlaceLabel: UILabel!
     
@@ -86,6 +87,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let rotateRightImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateRightImageTapped))
         rotateRightImageTapRecognizer.name = "tap"
         rotateRightImage.addGestureRecognizer(rotateRightImageTapRecognizer)
+        
+        let rotateLeftImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateLeftImageTapped))
+        rotateLeftImageTapRecognizer.name = "tap"
+        rotateLeftImage.addGestureRecognizer(rotateLeftImageTapRecognizer)
         
         let lockImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.lockImageTapped))
         lockImageTapRecognizer.name = "tap"
@@ -209,6 +214,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sizeSlider.isHidden = true
         sizeLabel.isHidden = true
         rotateRightImage.isHidden = true
+        rotateLeftImage.isHidden = true
         lockImage.isHidden = true
         tapToPlaceLabel.isHidden = true
     }
@@ -224,6 +230,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sizeSlider.isHidden = false
         sizeLabel.isHidden = false
         rotateRightImage.isHidden = false
+        rotateLeftImage.isHidden = false
         lockImage.isHidden = false
         tapToPlaceLabel.isHidden = false
         startBlinkTimer()
@@ -358,7 +365,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBAction func rotateRightImageTapped(_ sender: UITapGestureRecognizer) {
         impact.impactOccurred()
         
-        sceneController.rotateFrame(SCNVector4(0, 0, 1.0, 0))
+        sceneController.rotateFrame(-Float.pi / 2)
+    }
+    
+    /**
+     Rotates frame left.
+     */
+    @IBAction func rotateLeftImageTapped(_ sender: UITapGestureRecognizer) {
+        impact.impactOccurred()
+        
+        sceneController.rotateFrame(Float.pi / 2)
     }
     
     /**

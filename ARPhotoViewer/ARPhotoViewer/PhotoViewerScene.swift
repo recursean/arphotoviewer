@@ -16,6 +16,7 @@ class PhotoViewerScene {
     var image: UIImage?
     var aspect: Float = 2.0
     var defaultRotation = SCNVector4(0, 0, 0, 0)
+    var rotationOffset: Float = 0.0
     var updateRotation = false
     
     // meters to feet
@@ -96,6 +97,8 @@ class PhotoViewerScene {
         if(updateRotation) {
            frameContainer!.rotation = defaultRotation
         }
+        
+        frameContainer!.eulerAngles = SCNVector3Make(frameContainer!.eulerAngles.x, frameContainer!.eulerAngles.y, frameContainer!.eulerAngles.z + rotationOffset)
     }
     
     /**
@@ -141,8 +144,17 @@ class PhotoViewerScene {
         return [frame!.width, frame!.height, frame!.length]
     }
     
-    func rotateFrame(_ rotation: SCNVector4) {
-        print("rotating")
-        //currentRotation = rotation
+    /**
+     Rotates frame by specified amount.
+     */
+    func rotateFrame(_ rotation: Float) {
+        if(rotationOffset + rotation == Float.pi * 2 || rotationOffset + rotation == -Float.pi * 2) {
+            rotationOffset = 0
+            print("resetting")
+        }
+        
+        else {
+            rotationOffset += rotation
+        }
     }
 }
