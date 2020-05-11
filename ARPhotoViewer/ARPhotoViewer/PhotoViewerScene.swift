@@ -18,6 +18,8 @@ class PhotoViewerScene {
     var defaultRotation = SCNVector4(0, 0, 0, 0)
     var rotationOffset: Float = 0.0
     var updateRotation = false
+    let defaultMaterial = SCNMaterial()
+    let imageMaterial = SCNMaterial()
     
     // meters to feet
     let mtof: Float = 3.28084
@@ -26,7 +28,7 @@ class PhotoViewerScene {
      Create box "frame" and init scene
      */
     init() {
-        frame = SCNBox(width: 0.4, height: 0.8, length: 0.05, chamferRadius: 0.0)
+        frame = SCNBox(width: 0.3048, height: 0.6096, length: 0.05, chamferRadius: 0.0)
         frameContainer = SCNNode(geometry: frame)
         
         //setImageString("art.scnassets/arnolfini.jpg")
@@ -35,20 +37,18 @@ class PhotoViewerScene {
     }
     
     /**
-     Update image size with specified values.
-     */
-    func updateFrameSize(width: CGFloat, height: CGFloat, length: CGFloat) {
-        frame?.width = width
-        frame?.height = height
-        frame?.length = length
-    }
-    
-    /**
      Update image size. Either increase or decrease by certain amount.
      */
     func updateFrameSize(_ value: Float) {
         frame?.width = CGFloat(value)
         frame?.height = CGFloat(value * aspect)
+    }
+    
+    /**
+     Update image length with specified value.
+     */
+    func updateFrameLength(_ length: CGFloat) {
+        frame?.length = length
     }
     
     /**
@@ -82,6 +82,8 @@ class PhotoViewerScene {
         directionalNode.light = directionalLight
         
         scene.rootNode.addChildNode(directionalNode)
+        
+        setDefaultMaterial(.brown)
     }
     
     /**
@@ -98,7 +100,8 @@ class PhotoViewerScene {
            frameContainer!.rotation = defaultRotation
         }
         
-        frameContainer!.eulerAngles = SCNVector3Make(frameContainer!.eulerAngles.x, frameContainer!.eulerAngles.y, frameContainer!.eulerAngles.z + rotationOffset)
+        frameContainer!.eulerAngles.z += rotationOffset
+        //frameContainer!.localRotate(by: SCNVector4(0, 0, rotationOffset, 0))
     }
     
     /**
@@ -124,8 +127,8 @@ class PhotoViewerScene {
      */
     func setImage(_ image: UIImage) {
         self.image = image
-        
-        frame!.firstMaterial?.diffuse.contents = self.image
+        imageMaterial.diffuse.contents = self.image
+        setMaterials(false)
     }
     
     /**
@@ -133,8 +136,18 @@ class PhotoViewerScene {
      */
     func setImageString(_ image: String) {
         self.image = UIImage(named: image)
+        imageMaterial.diffuse.contents = self.image
+        setMaterials(false)
+    }
+    
+    /**
+     Set default material for sides of box not covered by box
+     */
+    func setDefaultMaterial(_ color: UIColor) {
+        defaultMaterial.diffuse.contents = color
+        defaultMaterial.locksAmbientWithDiffuse = true
         
-        frame!.firstMaterial?.diffuse.contents = self.image
+        setMaterials(false)
     }
     
     /**
@@ -150,11 +163,44 @@ class PhotoViewerScene {
     func rotateFrame(_ rotation: Float) {
         if(rotationOffset + rotation == Float.pi * 2 || rotationOffset + rotation == -Float.pi * 2) {
             rotationOffset = 0
-            print("resetting")
         }
         
         else {
             rotationOffset += rotation
+        }
+        //frameContainer!.localRotate(by: SCNVector4(0, 0, 0, rotationOffset))
+    }
+    
+    /**
+     Toggle if image gets drawn on all sides or not
+     */
+    func toggleAllSides(_ showAllSides: Bool) {
+        setMaterials(showAllSides)
+    }
+    
+    /**
+     Set the texture for each of the 6 sides of frame
+     */
+    func setMaterials(_ showAllSides: Bool) {
+        if(showAllSides) {
+            frame!.materials = [
+                                imageMaterial,
+                                imageMaterial,
+                                imageMaterial,
+                                imageMaterial,
+                                imageMaterial,
+                                imageMaterial
+            ]
+        }
+        else {
+            frame!.materials = [
+                                imageMaterial,
+                                defaultMaterial,
+                                imageMaterial,
+                                defaultMaterial,
+                                defaultMaterial,
+                                defaultMaterial
+            ]
         }
     }
 }

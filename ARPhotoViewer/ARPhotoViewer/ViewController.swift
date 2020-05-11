@@ -23,7 +23,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var rotateLeftImage: UIImageView!
     @IBOutlet weak var lockImage: UIImageView!
     @IBOutlet weak var tapToPlaceLabel: UILabel!
-    
+    @IBOutlet weak var lengthSlider: UISlider!
+    @IBOutlet weak var lengthLabel: UILabel!
+    @IBOutlet weak var allSidesSwitch: UISwitch!
+    @IBOutlet weak var allSidesStack: UIStackView!
+    @IBOutlet weak var colorPickerButtonView: UIView!
+    @IBOutlet weak var colorPickerStack: UIStackView!
+    @IBOutlet weak var purpleButton: UIView!
+    @IBOutlet weak var indigoButton: UIView!
+    @IBOutlet weak var tealButton: UIView!
+    @IBOutlet weak var greenButton: UIView!
+    @IBOutlet weak var yellowButton: UIView!
+    @IBOutlet weak var orangeButton: UIView!
+    @IBOutlet weak var pinkButton: UIView!
+    @IBOutlet weak var redButton: UIView!
+    @IBOutlet weak var whiteButton: UIView!
+    @IBOutlet weak var blackButton: UIView!
+    @IBOutlet weak var darkGrayButton: UIView!
+    @IBOutlet weak var lightGrayButton: UIView!
+    @IBOutlet weak var brownButton: UIView!
+
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
     var showFrame: Bool = false
@@ -59,48 +78,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         numFmt.numberStyle = .decimal
         numFmt.maximumSignificantDigits = 2
         
-        // rotate slider
+        // rotate sliders
         distanceSlider.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
+        lengthSlider.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
         
         // rotate min slider image -- turns image black for some reason
         distanceSlider.minimumValueImage = distanceSlider.minimumValueImage?.rotate(radians: -CGFloat.pi/2)
         distanceSlider.minimumValueImage = distanceSlider.minimumValueImage?.withTintColor(.white)
+        
+        lengthSlider.minimumValueImage = lengthSlider.minimumValueImage?.rotate(radians: -CGFloat.pi/2)
+        lengthSlider.minimumValueImage = lengthSlider.minimumValueImage?.withTintColor(.white)
         
         updateDistanceLabel(distanceSlider.value)
         zFrameOffset = -1.0 * distanceSlider.value
         
         updateSizeLabel()
         
-        // gesture recognizers
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapScreen))
-        screenTapRecognizer.name = "tap"
-        self.view.addGestureRecognizer(screenTapRecognizer)
-        
-        let addImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.addImageTapped))
-        addImageTapRecognizer.name = "tap"
-        addImage.addGestureRecognizer(addImageTapRecognizer)
-        
-        let infoImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.infoImageTapped))
-        infoImageTapRecognizer.name = "tap"
-        infoImage.addGestureRecognizer(infoImageTapRecognizer)
-        
-        let rotateRightImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateRightImageTapped))
-        rotateRightImageTapRecognizer.name = "tap"
-        rotateRightImage.addGestureRecognizer(rotateRightImageTapRecognizer)
-        
-        let rotateLeftImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateLeftImageTapped))
-        rotateLeftImageTapRecognizer.name = "tap"
-        rotateLeftImage.addGestureRecognizer(rotateLeftImageTapRecognizer)
-        
-        let lockImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.lockImageTapped))
-        lockImageTapRecognizer.name = "tap"
-        lockImage.addGestureRecognizer(lockImageTapRecognizer)
-        
-        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didDoubleTapScreen))
-        doubleTapRecognizer.name = "doubleTap"
-        doubleTapRecognizer.numberOfTapsRequired = 2
-        self.view.addGestureRecognizer(doubleTapRecognizer)
-
+        setGestureRecognizers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -130,6 +124,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sceneView.session.pause()
     }
 
+    /**
+     Set up the many gesture recognizers needed
+     */
+    func setGestureRecognizers() {
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didTapScreen))
+        screenTapRecognizer.name = "tap"
+        self.view.addGestureRecognizer(screenTapRecognizer)
+        
+        let addImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.addImageTapped))
+        addImageTapRecognizer.name = "tap"
+        addImage.addGestureRecognizer(addImageTapRecognizer)
+        
+        let infoImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.infoImageTapped))
+        infoImageTapRecognizer.name = "tap"
+        infoImage.addGestureRecognizer(infoImageTapRecognizer)
+        
+        let rotateRightImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateRightImageTapped))
+        rotateRightImageTapRecognizer.name = "tap"
+        rotateRightImage.addGestureRecognizer(rotateRightImageTapRecognizer)
+        
+        let rotateLeftImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateLeftImageTapped))
+        rotateLeftImageTapRecognizer.name = "tap"
+        rotateLeftImage.addGestureRecognizer(rotateLeftImageTapRecognizer)
+        
+        let colorPickerViewTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.toggleColorPicker))
+        colorPickerViewTapRecognizer.name = "tap"
+        colorPickerButtonView.addGestureRecognizer(colorPickerViewTapRecognizer)
+        
+        let colorPickerTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.selectColor))
+        colorPickerTapRecognizer.name = "tap"
+        colorPickerStack.addGestureRecognizer(colorPickerTapRecognizer)
+        
+        let lockImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.lockImageTapped))
+        lockImageTapRecognizer.name = "tap"
+        lockImage.addGestureRecognizer(lockImageTapRecognizer)
+        
+        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didDoubleTapScreen))
+        doubleTapRecognizer.name = "doubleTap"
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        self.view.addGestureRecognizer(doubleTapRecognizer)
+    }
     // MARK: - ARSCNViewDelegate
     
     /**
@@ -212,11 +247,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         distanceSlider.isHidden = true
         addImage.isHidden = false
         sizeSlider.isHidden = true
+        lengthSlider.isHidden = true
         sizeLabel.isHidden = true
         rotateRightImage.isHidden = true
         rotateLeftImage.isHidden = true
         lockImage.isHidden = true
         tapToPlaceLabel.isHidden = true
+        lengthLabel.isHidden = true
+        allSidesStack.isHidden = true
+        colorPickerButtonView.isHidden = true
+        colorPickerStack.isHidden = true
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -228,12 +268,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         distanceSlider.isHidden = false
         addImage.isHidden = true
         sizeSlider.isHidden = false
+        lengthSlider.isHidden = false
         sizeLabel.isHidden = false
         rotateRightImage.isHidden = false
         rotateLeftImage.isHidden = false
         lockImage.isHidden = false
         tapToPlaceLabel.isHidden = false
+        lengthLabel.isHidden = false
+        allSidesStack.isHidden = false
+        colorPickerButtonView.isHidden = false
+        colorPickerStack.isHidden = true
         startBlinkTimer()
+        
+        view.addConstraint(NSLayoutConstraint(item: lengthLabel, attribute: .top, relatedBy: .equal, toItem: lengthSlider, attribute: .bottom, multiplier: 1, constant: 20))
     }
     
     /**
@@ -418,11 +465,56 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
+     Called when lengthSlider value has changed.
+     */
+    @IBAction func lengthValueChanged(_ sender: UISlider) {
+        sceneController.updateFrameLength(CGFloat(lengthSlider.value))
+
+        updateSizeLabel()
+    }
+    
+    /**
      Convert sizeSlider value to feet for label
      */
     func updateSizeLabel() {
         let dims = sceneController.getImageDimensions()
         
-        sizeLabel.text! = "\(numFmt.string(from: NSNumber(value: Float(dims[0]) * mtof))!)ft w X \(numFmt.string(from: NSNumber(value: Float(dims[1]) * mtof))!)ft h"
+        sizeLabel.text! = "\(numFmt.string(from: NSNumber(value: Float(dims[0]) * mtof))!)ft w X \(numFmt.string(from: NSNumber(value: Float(dims[1]) * mtof))!)ft h X \(numFmt.string(from: NSNumber(value: Float(dims[2]) * mtof))!)ft l"
+    }
+    
+    @IBAction func allSidesSwitchValueChanged(_ sender: UISwitch) {
+        sceneController.toggleAllSides(allSidesSwitch.isOn)
+        
+        if(allSidesSwitch.isOn) {
+            colorPickerButtonView.isHidden = true
+            colorPickerStack.isHidden = true
+        }
+        else {
+            colorPickerButtonView.isHidden = false
+            colorPickerStack.isHidden = true
+        }
+    }
+    
+    @objc func toggleColorPicker() {
+        impact.impactOccurred()
+        
+        if(colorPickerStack.isHidden) {
+            colorPickerStack.isHidden = false
+        }
+        else {
+            colorPickerStack.isHidden = true
+        }
+    }
+    
+    @objc func selectColor(_ recognizer: UIGestureRecognizer) {
+        let view = recognizer.view
+        let loc = recognizer.location(in: view)
+        let subview = view?.hitTest(loc, with: nil)
+
+        sceneController.setDefaultMaterial(subview!.backgroundColor!)
+
+        colorPickerButtonView.backgroundColor = subview!.backgroundColor!
+
+        colorPickerStack.isHidden = true
     }
 }
