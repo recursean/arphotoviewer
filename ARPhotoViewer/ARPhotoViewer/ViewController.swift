@@ -209,22 +209,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      */
     @objc func didTapScreen(recognizer: UITapGestureRecognizer) {
         if(didInitializeScene) {
-            if(showFrame && !isFrameSet) {
-                if let camera = sceneView.session.currentFrame?.camera {
-                    var translation = matrix_identity_float4x4
-                    translation.columns.3.z = zFrameOffset
-                    
-                    let transform = camera.transform * translation
-                    let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-                    sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
-                    
-                    impact.impactOccurred()
-                    prepareForSet()
+            if(isSafeToPlace()) {
+                if(showFrame && !isFrameSet) {
+                    if let camera = sceneView.session.currentFrame?.camera {
+                        var translation = matrix_identity_float4x4
+                        translation.columns.3.z = zFrameOffset
+                        
+                        let transform = camera.transform * translation
+                        let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+                        sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
+                        
+                        impact.impactOccurred()
+                        prepareForSet()
+                    }
                 }
-            }
-            else {
-                isUIHidden = !isUIHidden
-                toggleUI(isUIHidden)
+                else {
+                    toggleUI()
+                }
             }
         }
     }
@@ -240,11 +241,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
+     Checks to see if any sliders are being used.
+     */
+    func isSafeToPlace() -> Bool {
+        return  distanceSlider.state == .normal &&
+                sizeSlider.state == .normal &&
+                lengthSlider.state == .normal
+    }
+    
+    /**
      Toggles the UI for viewing pleasure.
      */
-    func toggleUI(_ hide: Bool) {
-        addImage.isHidden = hide
-        infoImage.isHidden = hide
+    func toggleUI() {
+        isUIHidden = !isUIHidden
+        
+        addImage.isHidden = isUIHidden
+        infoImage.isHidden = isUIHidden
     }
     
     /**
@@ -269,6 +281,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         colorPickerStack.isHidden = true
         trashImage.isHidden = true
         resetImage.isHidden = true
+        infoImage.isHidden = false
+        isUIHidden = false
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -292,6 +306,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         colorPickerStack.isHidden = true
         trashImage.isHidden = false
         resetImage.isHidden = false
+        infoImage.isHidden = true
+        isUIHidden = true
         startBlinkTimer()
         
         view.addConstraint(NSLayoutConstraint(item: lengthLabel, attribute: .top, relatedBy: .equal, toItem: lengthSlider, attribute: .bottom, multiplier: 1, constant: 20))
@@ -368,8 +384,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             sceneController.setImage(image.fixOrientation())
             sceneController.addFrame()
+            setSliderValues()
             prepareForFrame()
         }
+    }
+    
+    /**
+     Set the sliders to correct positions
+     */
+    func setSliderValues() {
+        let dims = sceneController.getFrameDimensions()
+        sizeSlider.value = Float(dims[0])
+        
+        zFrameOffset = Float(-2.75 * dims[0])
+        distanceSlider.value = -zFrameOffset
+        
+        lengthSlider.value = 0.05
+        
+        updateSizeLabel()
+        updateDistanceLabel(-zFrameOffset)
     }
     
     /**
@@ -491,7 +524,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Convert sizeSlider value to feet for label
      */
     func updateSizeLabel() {
-        let dims = sceneController.getImageDimensions()
+        let dims = sceneController.getFrameDimensions()
         
         sizeLabel.text! = "\(numFmt.string(from: NSNumber(value: Float(dims[0]) * mtof))!)ft w X \(numFmt.string(from: NSNumber(value: Float(dims[1]) * mtof))!)ft h X \(numFmt.string(from: NSNumber(value: Float(dims[2]) * mtof))!)ft l"
     }
@@ -559,12 +592,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @objc func resetImageTapped() {
         impact.impactOccurred()
         
-        distanceSlider.value = 0.9144
-        sizeSlider.value = 0.3048
-        lengthSlider.value = 0.05
-        zFrameOffset = -0.9144
-        updateDistanceLabel(distanceSlider.value)
         sceneController.setDefaultEdit()
-        updateSizeLabel()
+        setSliderValues()
     }
 }

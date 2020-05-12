@@ -45,6 +45,16 @@ class PhotoViewerScene {
     }
     
     /**
+     Update frame size. Sizes coming in will be in pixels.
+     */
+    func updateFrameSize(_ width: CGFloat, _ height: CGFloat) {
+        aspect = Float(height / width)
+        
+        frame?.width = width * 0.0001
+        frame?.height = height * 0.0001
+    }
+    
+    /**
      Update image length with specified value.
      */
     func updateFrameLength(_ length: CGFloat) {
@@ -127,7 +137,12 @@ class PhotoViewerScene {
      */
     func setImage(_ image: UIImage) {
         self.image = image
+        
+        updateFrameSize(image.size.width, image.size.height)
+        aspect = Float(image.size.height / image.size.width)
+        
         imageMaterial.diffuse.contents = self.image
+        
         setMaterials(false)
     }
     
@@ -153,7 +168,7 @@ class PhotoViewerScene {
     /**
      Returns width, height, and length of frame.
      */
-    func getImageDimensions() -> [CGFloat] {
+    func getFrameDimensions() -> [CGFloat] {
         return [frame!.width, frame!.height, frame!.length]
     }
     
@@ -208,7 +223,8 @@ class PhotoViewerScene {
      Set back to default frame size and length.
      */
     func setDefaultEdit() {
-        updateFrameSize(0.3048)
+        updateFrameSize(image!.size.width, image!.size.height)
+        
         updateFrameLength(0.05)
     }
     
