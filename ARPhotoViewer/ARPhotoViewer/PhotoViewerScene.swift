@@ -63,25 +63,25 @@ class PhotoViewerScene {
     }
     
     /**
-     Set default environment (lighting) for scene
+     Set default environment for scene
      */
     func setDefaults(scene: SCNScene) {
-        let ambientLightNode = SCNNode()
-        
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light?.type = SCNLight.LightType.ambient
-        ambientLightNode.light?.color = UIColor(white: 0.6, alpha: 1.0)
-        
-        scene.rootNode.addChildNode(ambientLightNode)
-        
-        let directionalLight = SCNLight()
-        directionalLight.type = .directional
-        
-        let directionalNode = SCNNode()
-        directionalNode.eulerAngles = SCNVector3Make(GLKMathDegreesToRadians(-130), GLKMathDegreesToRadians(0), GLKMathDegreesToRadians(35))
-        directionalNode.light = directionalLight
-        
-        scene.rootNode.addChildNode(directionalNode)
+//        let ambientLightNode = SCNNode()
+//
+//        ambientLightNode.light = SCNLight()
+//        ambientLightNode.light?.type = SCNLight.LightType.ambient
+//        ambientLightNode.light?.color = UIColor(white: 0.6, alpha: 1.0)
+//
+//        scene.rootNode.addChildNode(ambientLightNode)
+//
+//        let directionalLight = SCNLight()
+//        directionalLight.type = .directional
+//
+//        let directionalNode = SCNNode()
+//        directionalNode.eulerAngles = SCNVector3Make(GLKMathDegreesToRadians(-130), GLKMathDegreesToRadians(0), GLKMathDegreesToRadians(35))
+//        directionalNode.light = directionalLight
+//
+//        scene.rootNode.addChildNode(directionalNode)
         
         setDefaultMaterial(.brown)
     }
