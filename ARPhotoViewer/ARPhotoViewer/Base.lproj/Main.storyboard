@@ -233,12 +233,29 @@
                                     <constraint firstAttribute="width" constant="30" id="665-MP-EUW"/>
                                 </constraints>
                             </stackView>
+                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="trash.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="XXA-6N-mtm">
+                                <rect key="frame" x="20" y="64.5" width="40" height="39"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Y9a-wD-AFZ"/>
+                                    <constraint firstAttribute="width" constant="40" id="pUq-e1-OLA"/>
+                                </constraints>
+                            </imageView>
+                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.counterclockwise.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="fsG-Tg-dOB">
+                                <rect key="frame" x="70" y="64.5" width="40" height="39"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="D1S-VW-IIE"/>
+                                    <constraint firstAttribute="height" constant="40" id="bAy-4Q-C6R"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="wMj-0O-ASL" secondAttribute="bottom" constant="60" id="6IE-Ji-Sh7"/>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="width" secondItem="U0K-SW-4ec" secondAttribute="height" multiplier="0.5" id="8zT-aJ-AXU"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="9u7-4L-Xsu"/>
+                            <constraint firstItem="fsG-Tg-dOB" firstAttribute="leading" secondItem="XXA-6N-mtm" secondAttribute="trailing" constant="10" id="A6L-ku-3Wl"/>
                             <constraint firstItem="LDD-aX-isQ" firstAttribute="top" secondItem="csf-eu-qgV" secondAttribute="bottom" constant="10" id="AGt-Lw-Ac3"/>
                             <constraint firstItem="ceX-TW-1YG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="API-7b-4zx"/>
                             <constraint firstItem="VZN-BZ-MKG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="BEu-aj-Dtg"/>
@@ -252,6 +269,7 @@
                             <constraint firstItem="ceX-TW-1YG" firstAttribute="top" secondItem="LDD-aX-isQ" secondAttribute="bottom" constant="20" id="TaY-Af-hf9"/>
                             <constraint firstItem="WIp-Wu-bHb" firstAttribute="top" secondItem="fJ8-CL-aQM" secondAttribute="bottom" constant="20" id="TiW-Rk-JZ6"/>
                             <constraint firstItem="VZN-BZ-MKG" firstAttribute="width" secondItem="fQZ-KI-GVf" secondAttribute="height" multiplier="0.35" id="Uus-2l-DkV"/>
+                            <constraint firstItem="XXA-6N-mtm" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="20" id="VFb-cc-P9v"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="VZN-BZ-MKG" secondAttribute="bottom" constant="20" id="Y35-xZ-VoJ"/>
@@ -262,12 +280,14 @@
                             <constraint firstItem="WIp-Wu-bHb" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dot-82-0VW"/>
                             <constraint firstItem="LDD-aX-isQ" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dt8-bb-RbV"/>
                             <constraint firstAttribute="trailing" secondItem="kiR-1q-klE" secondAttribute="centerX" constant="20" id="fKG-2m-5df"/>
+                            <constraint firstItem="XXA-6N-mtm" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="gw3-UE-Z5W"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="wMj-0O-ASL" secondAttribute="trailing" constant="100" id="hH3-oR-hwE"/>
                             <constraint firstItem="gs9-Yc-TBJ" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="hcc-NI-jGi"/>
                             <constraint firstItem="qpH-T7-PkK" firstAttribute="leading" secondItem="fJ8-CL-aQM" secondAttribute="trailing" constant="10" id="iEV-RV-4mE"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="VVp-Bb-NTB" secondAttribute="bottom" constant="60" id="kh0-Qt-Afg"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
                             <constraint firstItem="gs9-Yc-TBJ" firstAttribute="width" secondItem="U0K-SW-4ec" secondAttribute="height" multiplier="0.5" id="uNf-Eh-g9H"/>
+                            <constraint firstItem="fsG-Tg-dOB" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="vZU-WN-yIY"/>
                             <constraint firstItem="V53-dW-O8j" firstAttribute="top" secondItem="qpH-T7-PkK" secondAttribute="bottom" constant="10" id="xDp-46-gja"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="WIp-Wu-bHb" secondAttribute="bottom" constant="60" id="zRK-PV-FXv"/>
                         </constraints>
@@ -295,6 +315,7 @@
                         <outlet property="pinkButton" destination="eRD-Rc-FKS" id="eT4-jq-4kU"/>
                         <outlet property="purpleButton" destination="RZZ-eQ-Sm7" id="hKE-va-wJS"/>
                         <outlet property="redButton" destination="aFX-ec-Q6M" id="5Nm-70-mqR"/>
+                        <outlet property="resetImage" destination="fsG-Tg-dOB" id="uuV-2y-sgo"/>
                         <outlet property="rotateLeftImage" destination="VVp-Bb-NTB" id="Z7D-qb-w0e"/>
                         <outlet property="rotateRightImage" destination="wMj-0O-ASL" id="2ZS-qh-a6s"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="MMN-Kn-ZOV"/>
@@ -302,6 +323,7 @@
                         <outlet property="sizeSlider" destination="VZN-BZ-MKG" id="RtV-wd-DDr"/>
                         <outlet property="tapToPlaceLabel" destination="ceX-TW-1YG" id="BgO-Lp-87s"/>
                         <outlet property="tealButton" destination="Y4X-vC-QlI" id="qGc-lt-Txv"/>
+                        <outlet property="trashImage" destination="XXA-6N-mtm" id="CkI-BN-O4z"/>
                         <outlet property="whiteButton" destination="Lt7-7C-ufm" id="Kvb-kl-UQS"/>
                         <outlet property="yellowButton" destination="aft-S4-J9N" id="hwg-tR-ebK"/>
                     </connections>
@@ -312,11 +334,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.counterclockwise.circle.fill" catalog="system" width="128" height="121"/>
         <image name="arrowshape.turn.up.left.circle.fill" catalog="system" width="128" height="121"/>
         <image name="arrowshape.turn.up.right.circle.fill" catalog="system" width="128" height="121"/>
         <image name="info.circle.fill" catalog="system" width="128" height="121"/>
         <image name="lock.fill" catalog="system" width="128" height="128"/>
         <image name="minus.circle.fill" catalog="system" width="128" height="121"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="trash.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>

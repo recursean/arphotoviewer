@@ -42,7 +42,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var darkGrayButton: UIView!
     @IBOutlet weak var lightGrayButton: UIView!
     @IBOutlet weak var brownButton: UIView!
-
+    @IBOutlet weak var trashImage: UIImageView!
+    @IBOutlet weak var resetImage: UIImageView!
+    
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
     var showFrame: Bool = false
@@ -160,6 +162,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         lockImageTapRecognizer.name = "tap"
         lockImage.addGestureRecognizer(lockImageTapRecognizer)
         
+        let trashImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.trashImageTapped))
+        trashImageTapRecognizer.name = "tap"
+        trashImage.addGestureRecognizer(trashImageTapRecognizer)
+        
+        let resetImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.resetImageTapped))
+        resetImageTapRecognizer.name = "tap"
+        resetImage.addGestureRecognizer(resetImageTapRecognizer)
+        
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didDoubleTapScreen))
         doubleTapRecognizer.name = "doubleTap"
         doubleTapRecognizer.numberOfTapsRequired = 2
@@ -257,6 +267,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         allSidesStack.isHidden = true
         colorPickerButtonView.isHidden = true
         colorPickerStack.isHidden = true
+        trashImage.isHidden = true
+        resetImage.isHidden = true
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -278,6 +290,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         allSidesStack.isHidden = false
         colorPickerButtonView.isHidden = false
         colorPickerStack.isHidden = true
+        trashImage.isHidden = false
+        resetImage.isHidden = false
         startBlinkTimer()
         
         view.addConstraint(NSLayoutConstraint(item: lengthLabel, attribute: .top, relatedBy: .equal, toItem: lengthSlider, attribute: .bottom, multiplier: 1, constant: 20))
@@ -482,6 +496,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sizeLabel.text! = "\(numFmt.string(from: NSNumber(value: Float(dims[0]) * mtof))!)ft w X \(numFmt.string(from: NSNumber(value: Float(dims[1]) * mtof))!)ft h X \(numFmt.string(from: NSNumber(value: Float(dims[2]) * mtof))!)ft l"
     }
     
+    /**
+     Called when the switch for show image on all sides is tapped.
+     */
     @IBAction func allSidesSwitchValueChanged(_ sender: UISwitch) {
         sceneController.toggleAllSides(allSidesSwitch.isOn)
         
@@ -495,6 +512,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
     
+    /**
+     Either display or hide the color picker.
+     */
     @objc func toggleColorPicker() {
         impact.impactOccurred()
         
@@ -506,7 +526,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
     
+    /**
+     A color was tapped on the color picker.
+     */
     @objc func selectColor(_ recognizer: UIGestureRecognizer) {
+        impact.impactOccurred()
+        
         let view = recognizer.view
         let loc = recognizer.location(in: view)
         let subview = view?.hitTest(loc, with: nil)
@@ -516,5 +541,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         colorPickerButtonView.backgroundColor = subview!.backgroundColor!
 
         colorPickerStack.isHidden = true
+    }
+    
+    /**
+     Hide the editing screen.
+     */
+    @objc func trashImageTapped() {
+        impact.impactOccurred()
+        
+        prepareForSet()
+        sceneController.removeFrame()
+    }
+    
+    /**
+     Reset back to default edit settings.
+     */
+    @objc func resetImageTapped() {
+        impact.impactOccurred()
+        
+        distanceSlider.value = 0.9144
+        sizeSlider.value = 0.3048
+        lengthSlider.value = 0.05
+        zFrameOffset = -0.9144
+        updateDistanceLabel(distanceSlider.value)
+        sceneController.setDefaultEdit()
+        updateSizeLabel()
     }
 }

@@ -203,4 +203,19 @@ class PhotoViewerScene {
             ]
         }
     }
+    
+    /**
+     Set back to default frame size and length.
+     */
+    func setDefaultEdit() {
+        updateFrameSize(0.3048)
+        updateFrameLength(0.05)
+    }
+    
+    /**
+     Removes frame from scene.
+     */
+    func removeFrame() {
+        frameContainer!.removeFromParentNode()
+    }
 }
