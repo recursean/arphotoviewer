@@ -306,7 +306,7 @@
                         <outlet property="distanceSlider" destination="kiR-1q-klE" id="2Xf-2U-2t2"/>
                         <outlet property="greenButton" destination="L2o-b7-cHZ" id="mK4-OY-Hae"/>
                         <outlet property="indigoButton" destination="MCw-Tt-TQ6" id="0uE-BA-0Aa"/>
-                        <outlet property="infoImage" destination="72H-dR-osa" id="8YV-Yf-4Qb"/>
+                        <outlet property="infoImage" destination="72H-dR-osa" id="ipF-YR-ieF"/>
                         <outlet property="lengthLabel" destination="WE8-aI-WkP" id="smO-P0-ij2"/>
                         <outlet property="lengthSlider" destination="gs9-Yc-TBJ" id="vLD-AY-wOP"/>
                         <outlet property="lightGrayButton" destination="5zQ-Uv-Q7b" id="UHD-Eu-HE0"/>

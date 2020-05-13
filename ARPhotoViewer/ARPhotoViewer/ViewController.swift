@@ -18,7 +18,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var sizeSlider: UISlider!
     @IBOutlet weak var sizeLabel: UILabel!
-    @IBOutlet weak var infoImage: UIImageView!
     @IBOutlet weak var rotateRightImage: UIImageView!
     @IBOutlet weak var rotateLeftImage: UIImageView!
     @IBOutlet weak var lockImage: UIImageView!
@@ -44,6 +43,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var brownButton: UIView!
     @IBOutlet weak var trashImage: UIImageView!
     @IBOutlet weak var resetImage: UIImageView!
+    @IBOutlet weak var infoImage: UIImageView!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -56,6 +56,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     var isUIHidden = false
     var blink = false
     
+    var addImageStartPoint = CGPoint()
+    var addImageGestureFailed = false
+    
+    var infoImageStartPoint = CGPoint()
+    var infoImageGestureFailed = false
+    
+    var rotateRightImageStartPoint = CGPoint()
+    var rotateRightImageGestureFailed = false
+    
+    var rotateLeftImageStartPoint = CGPoint()
+    var rotateLeftImageGestureFailed = false
+    
+    var lockImageStartPoint = CGPoint()
+    var lockImageGestureFailed = false
+    
+    var trashImageStartPoint = CGPoint()
+    var trashImageGestureFailed = false
+    
+    var resetImageStartPoint = CGPoint()
+    var resetImageGestureFailed = false
+
     let appTitle = "AR Photo Viewer"
     let appVersion = "Arnolfini 1.0"
     
@@ -134,21 +155,32 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         screenTapRecognizer.name = "tap"
         self.view.addGestureRecognizer(screenTapRecognizer)
         
-        let addImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.addImageTapped))
-        addImageTapRecognizer.name = "tap"
-        addImage.addGestureRecognizer(addImageTapRecognizer)
+        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didDoubleTapScreen))
+        doubleTapRecognizer.name = "doubleTap"
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        self.view.addGestureRecognizer(doubleTapRecognizer)
         
-        let infoImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.infoImageTapped))
-        infoImageTapRecognizer.name = "tap"
-        infoImage.addGestureRecognizer(infoImageTapRecognizer)
+        let infoImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.infoImageLongPressed))
+        infoImageLongPressRecognizer.name = "tap"
+        infoImageLongPressRecognizer.minimumPressDuration = 0
+        infoImageLongPressRecognizer.allowableMovement = 15.0
+        infoImage.addGestureRecognizer(infoImageLongPressRecognizer)
         
-        let rotateRightImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateRightImageTapped))
-        rotateRightImageTapRecognizer.name = "tap"
-        rotateRightImage.addGestureRecognizer(rotateRightImageTapRecognizer)
+        let addImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.addImageLongPressed))
+        addImageLongPressRecognizer.name = "longPress"
+        addImageLongPressRecognizer.minimumPressDuration = 0
+        addImageLongPressRecognizer.allowableMovement = 1.0
+        addImage.addGestureRecognizer(addImageLongPressRecognizer)
         
-        let rotateLeftImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.rotateLeftImageTapped))
-        rotateLeftImageTapRecognizer.name = "tap"
-        rotateLeftImage.addGestureRecognizer(rotateLeftImageTapRecognizer)
+        let rotateRightImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.rotateRightImageLongPressed))
+        rotateRightImageLongPressRecognizer.name = "tap"
+        rotateRightImageLongPressRecognizer.minimumPressDuration = 0
+        rotateRightImage.addGestureRecognizer(rotateRightImageLongPressRecognizer)
+        
+        let rotateLeftImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.rotateLeftImageLongPressed))
+        rotateLeftImageLongPressRecognizer.name = "tap"
+        rotateLeftImageLongPressRecognizer.minimumPressDuration = 0
+        rotateLeftImage.addGestureRecognizer(rotateLeftImageLongPressRecognizer)
         
         let colorPickerViewTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.toggleColorPicker))
         colorPickerViewTapRecognizer.name = "tap"
@@ -158,22 +190,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         colorPickerTapRecognizer.name = "tap"
         colorPickerStack.addGestureRecognizer(colorPickerTapRecognizer)
         
-        let lockImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.lockImageTapped))
-        lockImageTapRecognizer.name = "tap"
-        lockImage.addGestureRecognizer(lockImageTapRecognizer)
+        let lockImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.lockImageLongPressed))
+        lockImageLongPressRecognizer.name = "tap"
+        lockImageLongPressRecognizer.minimumPressDuration = 0
+        lockImage.addGestureRecognizer(lockImageLongPressRecognizer)
         
-        let trashImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.trashImageTapped))
-        trashImageTapRecognizer.name = "tap"
-        trashImage.addGestureRecognizer(trashImageTapRecognizer)
+        let trashImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.trashImageLongPressed))
+        trashImageLongPressRecognizer.name = "tap"
+        trashImageLongPressRecognizer.minimumPressDuration = 0
+        trashImage.addGestureRecognizer(trashImageLongPressRecognizer)
         
-        let resetImageTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.resetImageTapped))
-        resetImageTapRecognizer.name = "tap"
-        resetImage.addGestureRecognizer(resetImageTapRecognizer)
-        
-        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didDoubleTapScreen))
-        doubleTapRecognizer.name = "doubleTap"
-        doubleTapRecognizer.numberOfTapsRequired = 2
-        self.view.addGestureRecognizer(doubleTapRecognizer)
+        let resetImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.resetImageLongPressed))
+        resetImageLongPressRecognizer.name = "tap"
+        resetImageLongPressRecognizer.minimumPressDuration = 0
+        resetImage.addGestureRecognizer(resetImageLongPressRecognizer)
     }
     // MARK: - ARSCNViewDelegate
     
@@ -241,22 +271,118 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
-     Checks to see if any sliders are being used.
+     Called when add image is long pressed.
      */
-    func isSafeToPlace() -> Bool {
-        return  distanceSlider.state == .normal &&
-                sizeSlider.state == .normal &&
-                lengthSlider.state == .normal
+    @objc func addImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &addImageGestureFailed, &addImage, &addImageStartPoint, 175.0)) {
+            showImageSelector()
+        }
     }
     
     /**
-     Toggles the UI for viewing pleasure.
+     Displays info popup.
      */
-    func toggleUI() {
-        isUIHidden = !isUIHidden
+    @objc func infoImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &infoImageGestureFailed, &infoImage, &infoImageStartPoint, 175.0)) {
+            displayInfo()
+        }
+    }
+    
+    /**
+     Rotates frame right.
+     */
+    @objc func rotateRightImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &rotateRightImageGestureFailed, &rotateRightImage, &rotateRightImageStartPoint, 175.0)) {
+            sceneController.rotateFrame(-Float.pi / 2)
+        }
+    }
+    
+    /**
+     Rotates frame left.
+     */
+    @objc func rotateLeftImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &rotateLeftImageGestureFailed, &rotateLeftImage, &rotateLeftImageStartPoint, 175.0)) {
+            sceneController.rotateFrame(Float.pi / 2)
+        }
+    }
+    
+    /**
+     Sets frame to be rotated every frame
+     */
+    @objc func lockImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &lockImageGestureFailed, &lockImage, &lockImageStartPoint, 175.0)) {
+            let rotate = sceneController.toggleUpdateRotation()
+            
+            if(rotate) {
+                lockImage.image = UIImage(systemName: "lock.open.fill")
+            }
+            else {
+                lockImage.image = UIImage(systemName: "lock.fill")
+            }
+        }
+    }
+    
+    /**
+     Hide the editing screen.
+     */
+    @objc func trashImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &trashImageGestureFailed, &trashImage, &trashImageStartPoint, 175.0)) {
+            prepareForSet()
+            isFrameSet = false
+            sceneController.removeFrame()
+        }
+    }
+    
+    /**
+     Reset back to default edit settings.
+     */
+    @objc func resetImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &resetImageGestureFailed, &resetImage, &resetImageStartPoint, 175.0)) {
+             sceneController.setDefaultEdit()
+             setSliderValues()
+         }
+    }
+    
+    /**
+     Helper function to handle the different states of long press gestures. Returns true if gesture ended successfully.
+     */
+    func checkLongPress(_ sender: UILongPressGestureRecognizer, _ failedFlag: inout Bool, _ image: inout UIImageView, _ startPoint: inout CGPoint, _ allowableMovement: Float) -> Bool {
+        // record starting position and highlight
+        if(sender.state == .began) {
+            startPoint = sender.location(in: self.view)
+            image.tintColor = .lightGray
+            impact.impactOccurred()
+        }
         
-        addImage.isHidden = isUIHidden
-        infoImage.isHidden = isUIHidden
+        // check to see if finger has moved too far since start
+        else if(sender.state == .changed) {
+            if(failedFlag) {
+                return false
+            }
+            
+            let currentPoint = sender.location(in: self.view)
+            
+            let distance = hypotf(Float(currentPoint.x - startPoint.x), Float(currentPoint.y - startPoint.y))
+            
+            if (distance > allowableMovement) {
+                image.tintColor = .white
+                failedFlag = true
+            }
+        }
+        
+        // unhighlight if succesfull end
+        else if(sender.state == .ended) {
+            if(failedFlag) {
+                failedFlag = false
+            }
+            else {
+                image.tintColor = .white
+                
+                return true
+            }
+        }
+        
+        return false
     }
     
     /**
@@ -314,13 +440,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
-     Open camera or user's photo gallery to allow them to select an image.
+     Checks to see if any sliders are being used.
      */
-    @IBAction func addImageTapped(_ sender: UITapGestureRecognizer) {
+    func isSafeToPlace() -> Bool {
+        return  distanceSlider.state == .normal &&
+                sizeSlider.state == .normal &&
+                lengthSlider.state == .normal
+    }
+    
+    /**
+     Toggles the UI for viewing pleasure.
+     */
+    func toggleUI() {
+        isUIHidden = !isUIHidden
         
+        addImage.isHidden = isUIHidden
+        infoImage.isHidden = isUIHidden
+    }
+    
+    /**
+     Called when image has been selected
+     */
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        self.dismiss(animated: true, completion: { () -> Void in
+            
+        })
+        
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            sceneController.setImage(image.fixOrientation())
+            sceneController.addFrame()
+            setSliderValues()
+            prepareForFrame()
+        }
+    }
+    
+    /**
+     Display the image selection menu.
+     */
+    func showImageSelector() {
         let alert: UIAlertController?
         
-        impact.impactOccurred()
+        //impact.impactOccurred()
         
         if(UIDevice.current.userInterfaceIdiom == .pad) {
             alert = UIAlertController(title: "Image Selection", message: "Take or select an image to display. This app does not store or share your images.", preferredStyle: .alert)
@@ -374,22 +534,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     }
     
     /**
-     Called when image has been selected
-     */
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        self.dismiss(animated: true, completion: { () -> Void in
-            
-        })
-        
-        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            sceneController.setImage(image.fixOrientation())
-            sceneController.addFrame()
-            setSliderValues()
-            prepareForFrame()
-        }
-    }
-    
-    /**
      Set the sliders to correct positions
      */
     func setSliderValues() {
@@ -439,52 +583,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }, completion: nil)
     }
     
-    
     /**
-     Displays info popup.
+     Display info popup
      */
-    @IBAction func infoImageTapped(_ sender: UITapGestureRecognizer) {
-        impact.impactOccurred()
-        
+    func displayInfo() {
         let alert = UIAlertController(title: appTitle, message: "\(appVersion)\nCopyright © Sean McShane", preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
         
         self.present(alert, animated: true)
-    }
-    
-    /**
-     Rotates frame right.
-     */
-    @IBAction func rotateRightImageTapped(_ sender: UITapGestureRecognizer) {
-        impact.impactOccurred()
-        
-        sceneController.rotateFrame(-Float.pi / 2)
-    }
-    
-    /**
-     Rotates frame left.
-     */
-    @IBAction func rotateLeftImageTapped(_ sender: UITapGestureRecognizer) {
-        impact.impactOccurred()
-        
-        sceneController.rotateFrame(Float.pi / 2)
-    }
-    
-    /**
-     Sets frame to be rotated every frame
-     */
-    @IBAction func lockImageTapped(_ sender: UITapGestureRecognizer) {
-        impact.impactOccurred()
-        
-        let rotate = sceneController.toggleUpdateRotation()
-        
-        if(rotate) {
-            lockImage.image = UIImage(systemName: "lock.open.fill")
-        }
-        else {
-            lockImage.image = UIImage(systemName: "lock.fill")
-        }
     }
     
     /**
@@ -574,25 +681,5 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         colorPickerButtonView.backgroundColor = subview!.backgroundColor!
 
         colorPickerStack.isHidden = true
-    }
-    
-    /**
-     Hide the editing screen.
-     */
-    @objc func trashImageTapped() {
-        impact.impactOccurred()
-        
-        prepareForSet()
-        sceneController.removeFrame()
-    }
-    
-    /**
-     Reset back to default edit settings.
-     */
-    @objc func resetImageTapped() {
-        impact.impactOccurred()
-        
-        sceneController.setDefaultEdit()
-        setSliderValues()
     }
 }
