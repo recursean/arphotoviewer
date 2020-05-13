@@ -16,14 +16,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var addImage: UIImageView!
     @IBOutlet weak var distanceSlider: UISlider!
     @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var distanceHelpLabel: UILabel!
     @IBOutlet weak var sizeSlider: UISlider!
     @IBOutlet weak var sizeLabel: UILabel!
+    @IBOutlet weak var sizeHelpLabel: UILabel!
     @IBOutlet weak var rotateRightImage: UIImageView!
     @IBOutlet weak var rotateLeftImage: UIImageView!
     @IBOutlet weak var lockImage: UIImageView!
     @IBOutlet weak var tapToPlaceLabel: UILabel!
     @IBOutlet weak var lengthSlider: UISlider!
-    @IBOutlet weak var lengthLabel: UILabel!
+    @IBOutlet weak var lengthHelpLabel: UILabel!
     @IBOutlet weak var allSidesSwitch: UISwitch!
     @IBOutlet weak var allSidesStack: UIStackView!
     @IBOutlet weak var colorPickerButtonView: UIView!
@@ -311,14 +313,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      */
     @objc func lockImageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if(checkLongPress(sender, &lockImageGestureFailed, &lockImage, &lockImageStartPoint, 175.0)) {
-            let rotate = sceneController.toggleUpdateRotation()
-            
-            if(rotate) {
-                lockImage.image = UIImage(systemName: "lock.open.fill")
-            }
-            else {
-                lockImage.image = UIImage(systemName: "lock.fill")
-            }
+            toggleFrameLock()
+        }
+    }
+    
+    func toggleFrameLock() {
+        let rotate = sceneController.toggleUpdateRotation()
+        
+        if(rotate) {
+            lockImage.image = UIImage(systemName: "lock.open.fill")
+        }
+        else {
+            lockImage.image = UIImage(systemName: "lock.fill")
         }
     }
     
@@ -338,8 +344,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      */
     @objc func resetImageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if(checkLongPress(sender, &resetImageGestureFailed, &resetImage, &resetImageStartPoint, 175.0)) {
-             sceneController.setDefaultEdit()
-             setSliderValues()
+            setDefaults()
          }
     }
     
@@ -401,7 +406,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         rotateLeftImage.isHidden = true
         lockImage.isHidden = true
         tapToPlaceLabel.isHidden = true
-        lengthLabel.isHidden = true
+        sizeHelpLabel.isHidden = true
+        distanceHelpLabel.isHidden = true
+        lengthHelpLabel.isHidden = true
         allSidesStack.isHidden = true
         colorPickerButtonView.isHidden = true
         colorPickerStack.isHidden = true
@@ -426,7 +433,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         rotateLeftImage.isHidden = false
         lockImage.isHidden = false
         tapToPlaceLabel.isHidden = false
-        lengthLabel.isHidden = false
+        sizeHelpLabel.isHidden = false
+        distanceHelpLabel.isHidden = false
+        lengthHelpLabel.isHidden = false
         allSidesStack.isHidden = false
         colorPickerButtonView.isHidden = false
         colorPickerStack.isHidden = true
@@ -435,8 +444,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         infoImage.isHidden = true
         isUIHidden = true
         startBlinkTimer()
-        
-        view.addConstraint(NSLayoutConstraint(item: lengthLabel, attribute: .top, relatedBy: .equal, toItem: lengthSlider, attribute: .bottom, multiplier: 1, constant: 20))
     }
     
     /**
@@ -676,10 +683,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let loc = recognizer.location(in: view)
         let subview = view?.hitTest(loc, with: nil)
 
-        sceneController.setDefaultMaterial(subview!.backgroundColor!)
+        setFrameColor(subview!.backgroundColor!)
+    }
+    
+    /**
+     Helper function to facilitate the changing of frame color from color picker.
+     */
+    func setFrameColor(_ color: UIColor) {
+        sceneController.setDefaultMaterial(color)
 
-        colorPickerButtonView.backgroundColor = subview!.backgroundColor!
+        colorPickerButtonView.backgroundColor = color
 
         colorPickerStack.isHidden = true
+    }
+    
+    /**
+     Set editor to default settings.
+     */
+    func setDefaults() {
+        if(allSidesSwitch.isOn) {
+            allSidesSwitch.setOn(false, animated: false)
+            colorPickerButtonView.isHidden = false
+        }
+        
+        setFrameColor(.brown)
+        
+        if(!sceneController.isFrameLocked()) {
+            toggleFrameLock()
+        }
+        sceneController.setFrameNoRotation()
+        
+        sceneController.setDefaultEdit()
+        setSliderValues()
     }
 }

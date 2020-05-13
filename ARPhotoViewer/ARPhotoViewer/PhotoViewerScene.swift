@@ -234,4 +234,18 @@ class PhotoViewerScene {
     func removeFrame() {
         frameContainer!.removeFromParentNode()
     }
+    
+    /**
+     Checks to see if frame is locked.
+     */
+    func isFrameLocked() -> Bool {
+        return !updateRotation
+    }
+    
+    /**
+     Sets the frame to locked (default).
+     */
+    func setFrameNoRotation() {
+        rotationOffset = 0
+    }
 }
