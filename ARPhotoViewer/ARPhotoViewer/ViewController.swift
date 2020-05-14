@@ -46,6 +46,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var trashImage: UIImageView!
     @IBOutlet weak var resetImage: UIImageView!
     @IBOutlet weak var infoImage: UIImageView!
+    @IBOutlet weak var cameraLockImage: UIImageView!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -197,6 +198,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         lockImageLongPressRecognizer.minimumPressDuration = 0
         lockImage.addGestureRecognizer(lockImageLongPressRecognizer)
         
+        let cameraLockImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.cameraLockImageLongPressed))
+        cameraLockImageLongPressRecognizer.name = "tap"
+        cameraLockImageLongPressRecognizer.minimumPressDuration = 0
+        cameraLockImage.addGestureRecognizer(cameraLockImageLongPressRecognizer)
+        
         let trashImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.trashImageLongPressed))
         trashImageLongPressRecognizer.name = "tap"
         trashImageLongPressRecognizer.minimumPressDuration = 0
@@ -317,14 +323,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
     
-    func toggleFrameLock() {
-        let rotate = sceneController.toggleUpdateRotation()
-        
-        if(rotate) {
-            lockImage.image = UIImage(systemName: "lock.open.fill")
-        }
-        else {
-            lockImage.image = UIImage(systemName: "lock.fill")
+    /**
+     Locks the frame orientation to camera.
+     */
+    @objc func cameraLockImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &lockImageGestureFailed, &lockImage, &lockImageStartPoint, 175.0)) {
+            toggleCameraLock()
         }
     }
     
@@ -416,6 +420,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         resetImage.isHidden = true
         infoImage.isHidden = false
         isUIHidden = false
+        cameraLockImage.isHidden = true
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -443,7 +448,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         resetImage.isHidden = false
         infoImage.isHidden = true
         isUIHidden = true
+        cameraLockImage.isHidden = false
         startBlinkTimer()
+    }
+    
+    func toggleFrameLock() {
+        let frameLocked = sceneController.toggleFrameLocked()
+        
+        if(frameLocked) {
+            lockImage.image = UIImage(systemName: "lock.fill")
+        }
+        else {
+            lockImage.image = UIImage(systemName: "lock.open.fill")
+        }
+    }
+    
+    func toggleCameraLock() {
+        let cameraLocked = sceneController.toggleCameraLocked()
+        
+        if(cameraLocked) {
+            cameraLockImage.image = UIImage(systemName: "camera.circle.fill")
+        }
+        else {
+            cameraLockImage.image = UIImage(systemName: "nosign")
+        }
     }
     
     /**
@@ -476,7 +504,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             sceneController.setImage(image.fixOrientation())
             sceneController.addFrame()
-            setSliderValues()
+            setDefaults()
             prepareForFrame()
         }
     }
@@ -708,9 +736,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         setFrameColor(.brown)
         
-        if(!sceneController.isFrameLocked()) {
+        if(sceneController.isFrameLocked()) {
             toggleFrameLock()
         }
+        
+        if(!sceneController.isCameraLocked()) {
+            toggleCameraLock()
+        }
+        
         sceneController.setFrameNoRotation()
         
         sceneController.setDefaultEdit()

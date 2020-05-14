@@ -81,7 +81,7 @@
                                 </constraints>
                             </imageView>
                             <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrowshape.turn.up.right.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="wMj-0O-ASL">
-                                <rect key="frame" x="274" y="762.5" width="40" height="39"/>
+                                <rect key="frame" x="287" y="762.5" width="40" height="39"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="2f2-8l-jCp"/>
@@ -89,15 +89,15 @@
                                 </constraints>
                             </imageView>
                             <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrowshape.turn.up.left.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="VVp-Bb-NTB">
-                                <rect key="frame" x="100" y="762.5" width="40" height="39"/>
+                                <rect key="frame" x="87" y="762.5" width="40" height="39"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="FnO-Wk-U9U"/>
                                     <constraint firstAttribute="width" constant="40" id="rMC-9g-zqE"/>
                                 </constraints>
                             </imageView>
-                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="WIp-Wu-bHb">
-                                <rect key="frame" x="187" y="762.5" width="40" height="38.5"/>
+                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lock.open.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="WIp-Wu-bHb">
+                                <rect key="frame" x="147" y="762.5" width="40" height="38.5"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="0gu-02-Wf1"/>
@@ -269,6 +269,14 @@
                                     <constraint firstAttribute="height" constant="40" id="bAy-4Q-C6R"/>
                                 </constraints>
                             </imageView>
+                            <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="gth-OO-x1x">
+                                <rect key="frame" x="227" y="762.5" width="40" height="39"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Tnl-oR-8Ma"/>
+                                    <constraint firstAttribute="width" constant="40" id="mm9-Rd-ggB"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -287,23 +295,25 @@
                             <constraint firstItem="fJ8-CL-aQM" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="Hll-GN-S1R"/>
                             <constraint firstItem="V53-dW-O8j" firstAttribute="leading" secondItem="fJ8-CL-aQM" secondAttribute="trailing" constant="10" id="KYA-ub-elc"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="72H-dR-osa" secondAttribute="trailing" constant="20" id="Lcl-kX-5Xg"/>
+                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="gth-OO-x1x" secondAttribute="bottom" constant="60" id="MvJ-zO-qVh"/>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="T5c-WL-l5h"/>
                             <constraint firstItem="ceX-TW-1YG" firstAttribute="top" secondItem="LDD-aX-isQ" secondAttribute="bottom" constant="20" id="TaY-Af-hf9"/>
                             <constraint firstItem="WIp-Wu-bHb" firstAttribute="top" secondItem="fJ8-CL-aQM" secondAttribute="bottom" constant="20" id="TiW-Rk-JZ6"/>
+                            <constraint firstItem="gth-OO-x1x" firstAttribute="trailing" secondItem="wMj-0O-ASL" secondAttribute="leading" constant="-20" id="Tpl-wd-clx"/>
                             <constraint firstItem="VZN-BZ-MKG" firstAttribute="width" secondItem="fQZ-KI-GVf" secondAttribute="height" multiplier="0.35" id="Uus-2l-DkV"/>
                             <constraint firstItem="XXA-6N-mtm" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="20" id="VFb-cc-P9v"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
                             <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="VZN-BZ-MKG" secondAttribute="bottom" constant="20" id="Y35-xZ-VoJ"/>
+                            <constraint firstItem="WIp-Wu-bHb" firstAttribute="leading" secondItem="VVp-Bb-NTB" secondAttribute="trailing" constant="20" id="ZHR-a5-zi8"/>
                             <constraint firstItem="WIp-Wu-bHb" firstAttribute="top" secondItem="V53-dW-O8j" secondAttribute="bottom" constant="20" id="akF-VW-25n"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="leading" secondItem="gs9-Yc-TBJ" secondAttribute="centerX" constant="-20" id="bTj-8c-0ik"/>
-                            <constraint firstItem="VVp-Bb-NTB" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="100" id="cKn-nI-Yyn"/>
-                            <constraint firstItem="WIp-Wu-bHb" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dot-82-0VW"/>
+                            <constraint firstItem="gth-OO-x1x" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" constant="40" id="cHe-o5-bXL"/>
+                            <constraint firstItem="WIp-Wu-bHb" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" constant="-40" id="dot-82-0VW"/>
                             <constraint firstItem="LDD-aX-isQ" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="dt8-bb-RbV"/>
                             <constraint firstItem="WE8-aI-WkP" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="e6Y-IM-ywY"/>
                             <constraint firstAttribute="trailing" secondItem="kiR-1q-klE" secondAttribute="centerX" constant="20" id="fKG-2m-5df"/>
                             <constraint firstItem="XXA-6N-mtm" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="gw3-UE-Z5W"/>
-                            <constraint firstItem="fQZ-KI-GVf" firstAttribute="trailing" secondItem="wMj-0O-ASL" secondAttribute="trailing" constant="100" id="hH3-oR-hwE"/>
                             <constraint firstItem="gs9-Yc-TBJ" firstAttribute="centerY" secondItem="U0K-SW-4ec" secondAttribute="centerY" id="hcc-NI-jGi"/>
                             <constraint firstItem="qpH-T7-PkK" firstAttribute="leading" secondItem="fJ8-CL-aQM" secondAttribute="trailing" constant="10" id="iEV-RV-4mE"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="VVp-Bb-NTB" secondAttribute="bottom" constant="60" id="kh0-Qt-Afg"/>
@@ -324,6 +334,7 @@
                         <outlet property="allSidesSwitch" destination="KzW-56-87L" id="4Dv-sm-WU2"/>
                         <outlet property="blackButton" destination="myq-Rq-xyv" id="bbm-iZ-WyO"/>
                         <outlet property="brownButton" destination="PNA-4h-64L" id="537-Xx-eGb"/>
+                        <outlet property="cameraLockImage" destination="gth-OO-x1x" id="zVf-2Z-pax"/>
                         <outlet property="colorPickerButtonView" destination="V53-dW-O8j" id="foH-la-wsY"/>
                         <outlet property="colorPickerStack" destination="qpH-T7-PkK" id="uNC-ig-gWA"/>
                         <outlet property="darkGrayButton" destination="AUJ-Dg-Tqs" id="f1y-F3-fNy"/>
@@ -364,8 +375,9 @@
         <image name="arrow.counterclockwise.circle.fill" catalog="system" width="128" height="121"/>
         <image name="arrowshape.turn.up.left.circle.fill" catalog="system" width="128" height="121"/>
         <image name="arrowshape.turn.up.right.circle.fill" catalog="system" width="128" height="121"/>
+        <image name="camera.circle.fill" catalog="system" width="128" height="121"/>
         <image name="info.circle.fill" catalog="system" width="128" height="121"/>
-        <image name="lock.fill" catalog="system" width="128" height="128"/>
+        <image name="lock.open.fill" catalog="system" width="128" height="115"/>
         <image name="minus.circle.fill" catalog="system" width="128" height="121"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="121"/>
         <image name="trash.circle.fill" catalog="system" width="128" height="121"/>

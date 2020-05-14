@@ -17,9 +17,10 @@ class PhotoViewerScene {
     var aspect: Float = 2.0
     var defaultRotation = SCNVector4(0, 0, 0, 0)
     var rotationOffset: Float = 0.0
-    var updateRotation = false
+    var frameLocked = false
     let defaultMaterial = SCNMaterial()
     let imageMaterial = SCNMaterial()
+    var cameraLocked = true
     
     // meters to feet
     let mtof: Float = 3.28084
@@ -103,24 +104,45 @@ class PhotoViewerScene {
         - when screen is tapped to place frame
      */
     func updateFramePosition(position: SCNVector3, _ pov: SCNNode) {
-        frameContainer!.orientation = pov.orientation
-        frameContainer!.position = position
-        
-        if(updateRotation) {
-           frameContainer!.rotation = defaultRotation
+        if(!frameLocked) {
+            frameContainer!.position = position
+        }
+            
+        if(cameraLocked) {
+            frameContainer!.orientation = pov.orientation
+        }
+        else {
+            if(!frameLocked) {
+                frameContainer!.orientation.x = 0
+                frameContainer!.orientation.y = 0
+            }
         }
         
-        frameContainer!.eulerAngles.z += rotationOffset
-        //frameContainer!.localRotate(by: SCNVector4(0, 0, rotationOffset, 0))
+        var glQuaternion = GLKQuaternionMake(frameContainer!.orientation.x, frameContainer!.orientation.y, frameContainer!.orientation.z, frameContainer!.orientation.w)
+
+        // Rotate around Z axis
+        let multiplier = GLKQuaternionMakeWithAngleAndAxis(rotationOffset, 0, 0, 1)
+        glQuaternion = GLKQuaternionMultiply(glQuaternion, multiplier)
+
+        frameContainer!.orientation = SCNQuaternion(x: glQuaternion.x, y: glQuaternion.y, z: glQuaternion.z, w: glQuaternion.w)
     }
     
     /**
      Sets if rotation should be updated each frame
      */
-    func toggleUpdateRotation() -> Bool {
-        updateRotation = !updateRotation
+    func toggleFrameLocked() -> Bool {
+        frameLocked = !frameLocked
         
-        return updateRotation
+        return frameLocked
+    }
+    
+    /**
+     Sets if frame should be locked to camera.
+     */
+    func toggleCameraLocked() -> Bool {
+        cameraLocked = !cameraLocked
+        
+        return cameraLocked
     }
     
     /**
@@ -183,7 +205,6 @@ class PhotoViewerScene {
         else {
             rotationOffset += rotation
         }
-        //frameContainer!.localRotate(by: SCNVector4(0, 0, 0, rotationOffset))
     }
     
     /**
@@ -239,7 +260,14 @@ class PhotoViewerScene {
      Checks to see if frame is locked.
      */
     func isFrameLocked() -> Bool {
-        return !updateRotation
+        return frameLocked
+    }
+    
+    /**
+     Checks to see if camera is locked.
+     */
+    func isCameraLocked() -> Bool {
+        return cameraLocked
     }
     
     /**
