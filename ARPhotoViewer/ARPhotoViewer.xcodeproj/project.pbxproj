@@ -63,14 +63,14 @@
 			isa = PBXGroup;
 			children = (
 				DD2B0373245F9C04002F9FA8 /* Extensions */,
-				DD2B035D245F97C6002F9FA8 /* AppDelegate.swift */,
 				DD2B035F245F97C6002F9FA8 /* art.scnassets */,
-				DD2B0361245F97C6002F9FA8 /* ViewController.swift */,
-				DD2B0363245F97C6002F9FA8 /* Main.storyboard */,
 				DD2B0366245F97C9002F9FA8 /* Assets.xcassets */,
-				DD2B0368245F97C9002F9FA8 /* LaunchScreen.storyboard */,
 				DD2B036B245F97C9002F9FA8 /* Info.plist */,
+				DD2B0368245F97C9002F9FA8 /* LaunchScreen.storyboard */,
+				DD2B0363245F97C6002F9FA8 /* Main.storyboard */,
+				DD2B035D245F97C6002F9FA8 /* AppDelegate.swift */,
 				DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */,
+				DD2B0361245F97C6002F9FA8 /* ViewController.swift */,
 			);
 			path = ARPhotoViewer;
 			sourceTree = "<group>";
