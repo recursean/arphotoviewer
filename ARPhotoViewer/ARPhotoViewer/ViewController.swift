@@ -74,6 +74,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     var lockImageStartPoint = CGPoint()
     var lockImageGestureFailed = false
     
+    var cameraLockImageStartPoint = CGPoint()
+    var cameraLockImageGestureFailed = false
+    
     var trashImageStartPoint = CGPoint()
     var trashImageGestureFailed = false
     
@@ -235,7 +238,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                     let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
 
                     sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
-                }
+                    
+                    // calculate distance between frame and camera if frame is locked while editing
+                    if(sceneController.isFrameLocked()) {
+                        let node1Pos = SCNVector3ToGLKVector3(SCNVector3(camera.transform.columns.3.x, camera.transform.columns.3.y, camera.transform.columns.3.z))
+                        let node2Pos = SCNVector3ToGLKVector3(sceneController.getFramePosition())
+
+                        let distance = GLKVector3Distance(node1Pos, node2Pos)
+                        
+                        // run as main thread
+                        DispatchQueue.main.async {
+                            self.zFrameOffset = -1.0 * distance
+                            self.distanceSlider.value = distance
+                            self.updateDistanceLabel(distance)
+                        }
+                    }
+                } 
             }
         }
     }
@@ -327,7 +345,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Locks the frame orientation to camera.
      */
     @objc func cameraLockImageLongPressed(_ sender: UILongPressGestureRecognizer) {
-        if(checkLongPress(sender, &lockImageGestureFailed, &lockImage, &lockImageStartPoint, 175.0)) {
+        if(checkLongPress(sender, &cameraLockImageGestureFailed, &cameraLockImage, &cameraLockImageStartPoint, 175.0)) {
             toggleCameraLock()
         }
     }
@@ -442,7 +460,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         distanceHelpLabel.isHidden = false
         lengthHelpLabel.isHidden = false
         allSidesStack.isHidden = false
-        colorPickerButtonView.isHidden = false
+        if(!allSidesSwitch.isOn) {
+            colorPickerButtonView.isHidden = false
+        }
         colorPickerStack.isHidden = true
         trashImage.isHidden = false
         resetImage.isHidden = false
@@ -457,9 +477,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         if(frameLocked) {
             lockImage.image = UIImage(systemName: "lock.fill")
+            distanceSlider.isHidden = true
+            distanceHelpLabel.isHidden = true
         }
         else {
             lockImage.image = UIImage(systemName: "lock.open.fill")
+            distanceSlider.isHidden = false
+            distanceHelpLabel.isHidden = false
         }
     }
     
@@ -633,6 +657,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Called when distanceSlider value has changed.
      */
     @IBAction func distanceValueChanged(_ sender: UISlider) {
+        impact.impactOccurred(intensity: 0.3)
         zFrameOffset = -1.0 * distanceSlider.value
         updateDistanceLabel(distanceSlider.value)
     }
@@ -648,6 +673,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Called when sizeSlider value has changed.
      */
     @IBAction func sizeValueChanged(_ sender: UISlider) {
+        impact.impactOccurred(intensity: 0.3)
+        
         sceneController.updateFrameSize(sizeSlider.value)
 
         updateSizeLabel()
@@ -657,6 +684,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Called when lengthSlider value has changed.
      */
     @IBAction func lengthValueChanged(_ sender: UISlider) {
+        impact.impactOccurred(intensity: 0.3)
+        
         sceneController.updateFrameLength(CGFloat(lengthSlider.value))
 
         updateSizeLabel()
@@ -718,7 +747,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Helper function to facilitate the changing of frame color from color picker.
      */
     func setFrameColor(_ color: UIColor) {
-        sceneController.setDefaultMaterial(color)
+        sceneController.setDefaultMaterial(color, allSidesSwitch.isOn)
 
         colorPickerButtonView.backgroundColor = color
 
@@ -729,9 +758,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      Set editor to default settings.
      */
     func setDefaults() {
-        if(allSidesSwitch.isOn) {
-            allSidesSwitch.setOn(false, animated: false)
-            colorPickerButtonView.isHidden = false
+        if(!allSidesSwitch.isOn) {
+            allSidesSwitch.setOn(true, animated: false)
+            colorPickerButtonView.isHidden = true
         }
         
         setFrameColor(.brown)

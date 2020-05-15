@@ -77,24 +77,7 @@ class PhotoViewerScene {
      Set default environment for scene
      */
     func setDefaults(scene: SCNScene) {
-//        let ambientLightNode = SCNNode()
-//
-//        ambientLightNode.light = SCNLight()
-//        ambientLightNode.light?.type = SCNLight.LightType.ambient
-//        ambientLightNode.light?.color = UIColor(white: 0.6, alpha: 1.0)
-//
-//        scene.rootNode.addChildNode(ambientLightNode)
-//
-//        let directionalLight = SCNLight()
-//        directionalLight.type = .directional
-//
-//        let directionalNode = SCNNode()
-//        directionalNode.eulerAngles = SCNVector3Make(GLKMathDegreesToRadians(-130), GLKMathDegreesToRadians(0), GLKMathDegreesToRadians(35))
-//        directionalNode.light = directionalLight
-//
-//        scene.rootNode.addChildNode(directionalNode)
-        
-        setDefaultMaterial(.brown)
+        setDefaultMaterial(.brown, false)
     }
     
     /**
@@ -110,21 +93,22 @@ class PhotoViewerScene {
             
         if(cameraLocked) {
             frameContainer!.orientation = pov.orientation
+
+            frameContainer!.orientation = calculateRotateOrientation(rotationOffset)
         }
-        else {
-            if(!frameLocked) {
-                frameContainer!.orientation.x = 0
-                frameContainer!.orientation.y = 0
-            }
-        }
-        
+    }
+    
+    /**
+     Determine what the frame's orientation should be after applying rotation.
+     */
+    func calculateRotateOrientation(_ rotation: Float) -> SCNQuaternion {
         var glQuaternion = GLKQuaternionMake(frameContainer!.orientation.x, frameContainer!.orientation.y, frameContainer!.orientation.z, frameContainer!.orientation.w)
 
         // Rotate around Z axis
-        let multiplier = GLKQuaternionMakeWithAngleAndAxis(rotationOffset, 0, 0, 1)
+        let multiplier = GLKQuaternionMakeWithAngleAndAxis(rotation, 0, 0, 1)
         glQuaternion = GLKQuaternionMultiply(glQuaternion, multiplier)
-
-        frameContainer!.orientation = SCNQuaternion(x: glQuaternion.x, y: glQuaternion.y, z: glQuaternion.z, w: glQuaternion.w)
+        
+        return SCNQuaternion(x: glQuaternion.x, y: glQuaternion.y, z: glQuaternion.z, w: glQuaternion.w)
     }
     
     /**
@@ -165,7 +149,7 @@ class PhotoViewerScene {
         
         imageMaterial.diffuse.contents = self.image
         
-        setMaterials(false)
+        setMaterials(true)
     }
     
     /**
@@ -174,17 +158,17 @@ class PhotoViewerScene {
     func setImageString(_ image: String) {
         self.image = UIImage(named: image)
         imageMaterial.diffuse.contents = self.image
-        setMaterials(false)
+        setMaterials(true)
     }
     
     /**
      Set default material for sides of box not covered by box
      */
-    func setDefaultMaterial(_ color: UIColor) {
+    func setDefaultMaterial(_ color: UIColor, _ showAllSides: Bool) {
         defaultMaterial.diffuse.contents = color
         defaultMaterial.locksAmbientWithDiffuse = true
         
-        setMaterials(false)
+        setMaterials(showAllSides)
     }
     
     /**
@@ -192,6 +176,13 @@ class PhotoViewerScene {
      */
     func getFrameDimensions() -> [CGFloat] {
         return [frame!.width, frame!.height, frame!.length]
+    }
+    
+    /**
+     Returns the frame's position.
+     */
+    func getFramePosition() -> SCNVector3 {
+        return frameContainer!.position
     }
     
     /**
@@ -204,6 +195,11 @@ class PhotoViewerScene {
         
         else {
             rotationOffset += rotation
+        }
+        
+        // doing rotation here because it should only be done once and not every frame
+        if(!cameraLocked) {
+            frameContainer!.orientation = calculateRotateOrientation(rotation)
         }
     }
     
