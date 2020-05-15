@@ -261,6 +261,12 @@
                                     <constraint firstAttribute="width" constant="40" id="pUq-e1-OLA"/>
                                 </constraints>
                             </imageView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lock Help" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yq2-DR-uTo">
+                                <rect key="frame" x="165.5" y="660.5" width="83.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="17"/>
+                                <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <imageView hidden="YES" clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.counterclockwise.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="fsG-Tg-dOB">
                                 <rect key="frame" x="20" y="124.5" width="40" height="39"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -282,12 +288,14 @@
                         <constraints>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="hxf-HV-rWd" secondAttribute="bottom" constant="5" id="3vP-fA-yhk"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="wMj-0O-ASL" secondAttribute="bottom" constant="60" id="6IE-Ji-Sh7"/>
+                            <constraint firstItem="fJ8-CL-aQM" firstAttribute="top" secondItem="Yq2-DR-uTo" secondAttribute="bottom" constant="20" id="8AW-3Y-02N"/>
                             <constraint firstItem="kiR-1q-klE" firstAttribute="width" secondItem="U0K-SW-4ec" secondAttribute="height" multiplier="0.5" id="8zT-aJ-AXU"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="9u7-4L-Xsu"/>
                             <constraint firstItem="fsG-Tg-dOB" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="20" id="A6L-ku-3Wl"/>
                             <constraint firstItem="LDD-aX-isQ" firstAttribute="top" secondItem="csf-eu-qgV" secondAttribute="bottom" constant="10" id="AGt-Lw-Ac3"/>
                             <constraint firstItem="ceX-TW-1YG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="API-7b-4zx"/>
                             <constraint firstItem="VZN-BZ-MKG" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="BEu-aj-Dtg"/>
+                            <constraint firstItem="Yq2-DR-uTo" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="C9d-fd-COM"/>
                             <constraint firstItem="72H-dR-osa" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" constant="20" id="DJ0-QM-OMc"/>
                             <constraint firstItem="hxf-HV-rWd" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="DSu-tk-LIZ"/>
                             <constraint firstItem="csf-eu-qgV" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="Gi3-ep-5nH"/>
@@ -347,6 +355,7 @@
                         <outlet property="lengthHelpLabel" destination="WE8-aI-WkP" id="axl-Zn-uIV"/>
                         <outlet property="lengthSlider" destination="gs9-Yc-TBJ" id="vLD-AY-wOP"/>
                         <outlet property="lightGrayButton" destination="5zQ-Uv-Q7b" id="UHD-Eu-HE0"/>
+                        <outlet property="lockHelpLabel" destination="Yq2-DR-uTo" id="w9x-vX-R5z"/>
                         <outlet property="lockImage" destination="WIp-Wu-bHb" id="lqj-Al-AdH"/>
                         <outlet property="orangeButton" destination="fYS-GP-v3N" id="D87-R2-PI6"/>
                         <outlet property="pinkButton" destination="eRD-Rc-FKS" id="eT4-jq-4kU"/>

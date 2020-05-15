@@ -47,6 +47,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var resetImage: UIImageView!
     @IBOutlet weak var infoImage: UIImageView!
     @IBOutlet weak var cameraLockImage: UIImageView!
+    @IBOutlet weak var lockHelpLabel: UILabel!
     
     var sceneController = PhotoViewerScene()
     var didInitializeScene: Bool = false
@@ -58,6 +59,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     let numFmt = NumberFormatter()
     var isUIHidden = false
     var blink = false
+    var lockHelpBlinking = false
     
     var addImageStartPoint = CGPoint()
     var addImageGestureFailed = false
@@ -337,7 +339,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      */
     @objc func lockImageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if(checkLongPress(sender, &lockImageGestureFailed, &lockImage, &lockImageStartPoint, 175.0)) {
-            toggleFrameLock()
+            if(!lockHelpBlinking) {
+                toggleFrameLock()
+            }
         }
     }
     
@@ -346,7 +350,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
      */
     @objc func cameraLockImageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if(checkLongPress(sender, &cameraLockImageGestureFailed, &cameraLockImage, &cameraLockImageStartPoint, 175.0)) {
-            toggleCameraLock()
+            if(!lockHelpBlinking) {
+                toggleCameraLock()
+            }
         }
     }
     
@@ -439,6 +445,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         infoImage.isHidden = false
         isUIHidden = false
         cameraLockImage.isHidden = true
+        
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -479,11 +486,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             lockImage.image = UIImage(systemName: "lock.fill")
             distanceSlider.isHidden = true
             distanceHelpLabel.isHidden = true
+            startLockHelpBlinkTimer("Frame position locked")
         }
         else {
             lockImage.image = UIImage(systemName: "lock.open.fill")
             distanceSlider.isHidden = false
             distanceHelpLabel.isHidden = false
+            startLockHelpBlinkTimer("Frame position unlocked")
         }
     }
     
@@ -492,9 +501,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         if(cameraLocked) {
             cameraLockImage.image = UIImage(systemName: "camera.circle.fill")
+            startLockHelpBlinkTimer("Frame locked to camera")
         }
         else {
             cameraLockImage.image = UIImage(systemName: "nosign")
+            startLockHelpBlinkTimer("Frame not locked to camera")
         }
     }
     
@@ -626,7 +637,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     /**
      Animates the blinking of help label.
      */
-    @objc func blinkLabel() {
+    func blinkLabel() {
         var newAlpha: CGFloat = 0.0
         
         if(tapToPlaceLabel.alpha == 0.0) {
@@ -640,6 +651,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         UIView.animate(withDuration: 1.25, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
             self.tapToPlaceLabel.alpha = newAlpha
         }, completion: nil)
+    }
+    
+    /**
+     Starts to timer for blinking the camera/frame lock help label.
+     */
+    func startLockHelpBlinkTimer(_ helpText: String) {
+        if(!lockHelpBlinking) {
+            lockHelpLabel.text = helpText
+            lockHelpLabel.alpha = 1.0
+            lockHelpLabel.isHidden = false
+            lockHelpBlinking = true
+        
+            self.blinkLockHelpLabel()
+        }
+    }
+    
+    /**
+     Animates the blinking of camera/frame lock help label.
+     */
+    func blinkLockHelpLabel() {
+        let newAlpha: CGFloat = 0.0
+        
+        UIView.animate(withDuration: 1.25, delay: 0.5, options: UIView.AnimationOptions.curveEaseOut, animations: {
+            self.lockHelpLabel.alpha = newAlpha
+        }, completion: { completed in
+            self.lockHelpLabel.isHidden = true
+            self.lockHelpBlinking = false
+        })
     }
     
     /**
