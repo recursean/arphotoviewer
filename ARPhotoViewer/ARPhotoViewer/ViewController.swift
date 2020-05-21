@@ -418,6 +418,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     /// - Parameter recognizer: gesture recognizer triggered
     @objc func trashImageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if(checkLongPress(sender, &trashImageGestureFailed, trashImage, &trashImageStartPoint, 175.0, true)) {
+            // need to do twice so correct help labels are hidden
+            frameSet = false
             prepareForSet()
             frameSet = false
             sceneController.removeFrame()
@@ -550,7 +552,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         infoImage.isHidden = false
         isUIHidden = false
         cameraLockImage.isHidden = true
-        
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -581,6 +582,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         infoImage.isHidden = true
         isUIHidden = true
         cameraLockImage.isHidden = false
+        
         startBlinkTimer()
     }
     
@@ -763,13 +765,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             lockImage.image = UIImage(systemName: "lock.fill")
             distanceSlider.isHidden = true
             distanceHelpLabel.isHidden = true
-            startLockHelpBlink("Frame position locked")
+            startLockHelpBlink("Image position locked")
         }
         else {
             lockImage.image = UIImage(systemName: "lock.open.fill")
             distanceSlider.isHidden = false
             distanceHelpLabel.isHidden = false
-            startLockHelpBlink("Frame position unlocked")
+            startLockHelpBlink("Image position unlocked")
         }
     }
     
@@ -779,11 +781,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         if(cameraLocked) {
             cameraLockImage.image = UIImage(systemName: "camera.circle.fill")
-            startLockHelpBlink("Frame locked to camera")
+            startLockHelpBlink("Image orientation locked to camera")
         }
         else {
             cameraLockImage.image = UIImage(systemName: "nosign")
-            startLockHelpBlink("Frame not locked to camera")
+            startLockHelpBlink("Image orientation not locked to camera")
         }
     }
     
@@ -815,7 +817,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     /// Display info popup with copyright and version info.
     func displayInfo() {
-        let alert = UIAlertController(title: appTitle, message: "\(appVersion)\nCopyright © Sean McShane", preferredStyle: .alert)
+        let infoString = """
+        \n--- Tips ---\n
+        1. Tap plus button to take or select an image to view in AR
+        2. Tap screen once to toggle UI
+        3. Tap screen twice to pick up image (if set)
+        \n
+        \(appVersion)
+        Copyright © Sean McShane
+        """
+        
+        let alert = UIAlertController(title: appTitle, message: infoString, preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
         
