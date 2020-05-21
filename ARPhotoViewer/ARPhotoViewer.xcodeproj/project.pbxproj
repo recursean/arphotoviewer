@@ -15,6 +15,7 @@
 		DD2B036A245F97C9002F9FA8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD2B0368245F97C9002F9FA8 /* LaunchScreen.storyboard */; };
 		DD2B0372245F98F4002F9FA8 /* PhotoViewerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */; };
 		DD2B0375245F9C16002F9FA8 /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */; };
+		DDC2A60C247603D500887E3C /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DDC2A60B247603D500887E3C /* logo.png */; };
 		DDD3A2412460D8C500157434 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		DD2B036B245F97C9002F9FA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerScene.swift; sourceTree = "<group>"; };
 		DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extensions.swift"; sourceTree = "<group>"; };
+		DDC2A60B247603D500887E3C /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,6 +69,7 @@
 				DD2B0366245F97C9002F9FA8 /* Assets.xcassets */,
 				DD2B036B245F97C9002F9FA8 /* Info.plist */,
 				DD2B0368245F97C9002F9FA8 /* LaunchScreen.storyboard */,
+				DDC2A60B247603D500887E3C /* logo.png */,
 				DD2B0363245F97C6002F9FA8 /* Main.storyboard */,
 				DD2B035D245F97C6002F9FA8 /* AppDelegate.swift */,
 				DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */,
@@ -143,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD2B0360245F97C6002F9FA8 /* art.scnassets in Resources */,
+				DDC2A60C247603D500887E3C /* logo.png in Resources */,
 				DD2B036A245F97C9002F9FA8 /* LaunchScreen.storyboard in Resources */,
 				DD2B0367245F97C9002F9FA8 /* Assets.xcassets in Resources */,
 				DD2B0365245F97C6002F9FA8 /* Main.storyboard in Resources */,
