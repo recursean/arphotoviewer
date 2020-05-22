@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD2520FA247737D7003CF3C0 /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2520F9247737D7003CF3C0 /* NSLayoutConstraint+Extensions.swift */; };
+		DD2520FC24774C99003CF3C0 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DD2520FB24774C99003CF3C0 /* logo.png */; };
 		DD2B035E245F97C6002F9FA8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B035D245F97C6002F9FA8 /* AppDelegate.swift */; };
 		DD2B0360245F97C6002F9FA8 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = DD2B035F245F97C6002F9FA8 /* art.scnassets */; };
 		DD2B0362245F97C6002F9FA8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B0361245F97C6002F9FA8 /* ViewController.swift */; };
@@ -15,12 +17,13 @@
 		DD2B036A245F97C9002F9FA8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD2B0368245F97C9002F9FA8 /* LaunchScreen.storyboard */; };
 		DD2B0372245F98F4002F9FA8 /* PhotoViewerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */; };
 		DD2B0375245F9C16002F9FA8 /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */; };
-		DDC2A60C247603D500887E3C /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = DDC2A60B247603D500887E3C /* logo.png */; };
 		DDD3A2412460D8C500157434 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		DD2B035A245F97C6002F9FA8 /* ARPhotoViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARPhotoViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD2520F9247737D7003CF3C0 /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
+		DD2520FB24774C99003CF3C0 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = "../../../../../../ARPhotoViewer Icons/blue-gradient-bg/logo.png"; sourceTree = "<group>"; };
+		DD2B035A245F97C6002F9FA8 /* ARPhotoView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ARPhotoView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD2B035D245F97C6002F9FA8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD2B035F245F97C6002F9FA8 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		DD2B0361245F97C6002F9FA8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -30,7 +33,6 @@
 		DD2B036B245F97C9002F9FA8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerScene.swift; sourceTree = "<group>"; };
 		DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extensions.swift"; sourceTree = "<group>"; };
-		DDC2A60B247603D500887E3C /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -56,7 +58,7 @@
 		DD2B035B245F97C6002F9FA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DD2B035A245F97C6002F9FA8 /* ARPhotoViewer.app */,
+				DD2B035A245F97C6002F9FA8 /* ARPhotoView.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -69,11 +71,11 @@
 				DD2B0366245F97C9002F9FA8 /* Assets.xcassets */,
 				DD2B036B245F97C9002F9FA8 /* Info.plist */,
 				DD2B0368245F97C9002F9FA8 /* LaunchScreen.storyboard */,
-				DDC2A60B247603D500887E3C /* logo.png */,
 				DD2B0363245F97C6002F9FA8 /* Main.storyboard */,
 				DD2B035D245F97C6002F9FA8 /* AppDelegate.swift */,
 				DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */,
 				DD2B0361245F97C6002F9FA8 /* ViewController.swift */,
+				DD2520FB24774C99003CF3C0 /* logo.png */,
 			);
 			path = ARPhotoViewer;
 			sourceTree = "<group>";
@@ -83,6 +85,7 @@
 			children = (
 				DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */,
 				DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */,
+				DD2520F9247737D7003CF3C0 /* NSLayoutConstraint+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -104,7 +107,7 @@
 			);
 			name = ARPhotoViewer;
 			productName = ARPhotoViewer;
-			productReference = DD2B035A245F97C6002F9FA8 /* ARPhotoViewer.app */;
+			productReference = DD2B035A245F97C6002F9FA8 /* ARPhotoView.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -146,7 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD2B0360245F97C6002F9FA8 /* art.scnassets in Resources */,
-				DDC2A60C247603D500887E3C /* logo.png in Resources */,
+				DD2520FC24774C99003CF3C0 /* logo.png in Resources */,
 				DD2B036A245F97C9002F9FA8 /* LaunchScreen.storyboard in Resources */,
 				DD2B0367245F97C9002F9FA8 /* Assets.xcassets in Resources */,
 				DD2B0365245F97C6002F9FA8 /* Main.storyboard in Resources */,
@@ -161,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD2B0375245F9C16002F9FA8 /* SCNNode+Extensions.swift in Sources */,
+				DD2520FA247737D7003CF3C0 /* NSLayoutConstraint+Extensions.swift in Sources */,
 				DD2B0362245F97C6002F9FA8 /* ViewController.swift in Sources */,
 				DDD3A2412460D8C500157434 /* UIImage+Extensions.swift in Sources */,
 				DD2B035E245F97C6002F9FA8 /* AppDelegate.swift in Sources */,
@@ -315,10 +319,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = sean.app.ARPhotoViewer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = "Arnolfini 1.0";
+				PRODUCT_BUNDLE_IDENTIFIER = com.smcshane.arphotoview;
+				PRODUCT_NAME = ARPhotoView;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -333,10 +338,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = sean.app.ARPhotoViewer;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = "Arnolfini 1.0";
+				PRODUCT_BUNDLE_IDENTIFIER = com.smcshane.arphotoview;
+				PRODUCT_NAME = ARPhotoView;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

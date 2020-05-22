@@ -51,6 +51,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var infoImage: UIImageView!
     @IBOutlet weak var cameraLockImage: UIImageView!
     @IBOutlet weak var lockHelpLabel: UILabel!
+    @IBOutlet weak var distanceSliderAspect: NSLayoutConstraint!
+    @IBOutlet weak var lengthSliderAspect: NSLayoutConstraint!
+    @IBOutlet weak var sizeSliderAspect: NSLayoutConstraint!
+    @IBOutlet weak var resetImageLeading: NSLayoutConstraint!
+    @IBOutlet weak var trashImageLeading: NSLayoutConstraint!
+    
+    var distanceSliderAspectLandscape: NSLayoutConstraint?
     
     // used to cancel image taps if finger moves far
     var addImageStartPoint = CGPoint()
@@ -122,7 +129,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     var selectedColorView: UIView?
 
     // app info used for info button
-    let appTitle = "AR Photo Viewer"
+    let appTitle = "ARPhotoView"
     let appVersion = "Arnolfini 1.0"
     
     // meters to feet
@@ -171,6 +178,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        distanceSliderAspectLandscape = distanceSliderAspect.constraintWithMultiplier(0.8)
+        
         // create a session configuration
         let config = ARWorldTrackingConfiguration()
         
@@ -195,6 +204,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         // pause the view's session
         sceneView.session.pause()
     }
+    
+    /// Phone has been rotated from landscape/portrait mode
+    /// - Parameters:
+    ///   - size:
+    ///   - coordinator:
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        if(showFrame) {
+            updateConstraints()
+        }
+     }
     
     // MARK: - init helper methods
     
@@ -319,6 +340,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         // grab the selected image
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            updateConstraints()
             sceneController.setImage(image.fixOrientation())
             sceneController.addFrame()
             setDefaults()
@@ -430,7 +452,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     /// - Parameter recognizer: gesture recognizer triggered
     @objc func resetImageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if(checkLongPress(sender, &resetImageGestureFailed, resetImage, &resetImageStartPoint, 175.0, true)) {
-            setDefaults()
+            if(!lockHelpBlinking) {
+                setDefaults()
+                startLockHelpBlink("Reset to default")
+            }
          }
     }
     
@@ -755,6 +780,65 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         self.present(alert!, animated: true)
     }
     
+    /// Update UI layout constraints after screen was rotated
+    func updateConstraints() {
+        if(UIDevice.current.orientation.isLandscape) {
+            let newDistanceConstraint = distanceSliderAspect.constraintWithMultiplier(0.75)
+            let newLengthConstraint = lengthSliderAspect.constraintWithMultiplier(0.75)
+            let newSizeConstraint = sizeSliderAspect.constraintWithMultiplier(0.95)
+            let newResetConstraint = resetImageLeading.constraintWithValue(40)
+            let newTrashConstraint = trashImageLeading.constraintWithValue(40)
+            
+            view.removeConstraint(distanceSliderAspect)
+            view.removeConstraint(lengthSliderAspect)
+            view.removeConstraint(sizeSliderAspect)
+            view.removeConstraint(resetImageLeading)
+            view.removeConstraint(trashImageLeading)
+            
+            view.addConstraint(newDistanceConstraint)
+            view.addConstraint(newLengthConstraint)
+            view.addConstraint(newSizeConstraint)
+            view.addConstraint(newResetConstraint)
+            view.addConstraint(newTrashConstraint)
+            
+            view.layoutIfNeeded()
+            
+            distanceSliderAspect = newDistanceConstraint
+            lengthSliderAspect = newLengthConstraint
+            sizeSliderAspect = newSizeConstraint
+            resetImageLeading = newResetConstraint
+            trashImageLeading = newTrashConstraint
+        }
+        
+        else {
+            let newDistanceConstraint = distanceSliderAspect.constraintWithMultiplier(0.5)
+            let newLengthConstraint = lengthSliderAspect.constraintWithMultiplier(0.5)
+            let newSizeConstraint = sizeSliderAspect.constraintWithMultiplier(0.35)
+            let newResetConstraint = resetImageLeading.constraintWithValue(20)
+            let newTrashConstraint = trashImageLeading.constraintWithValue(20)
+             
+            view.removeConstraint(distanceSliderAspect)
+            view.removeConstraint(lengthSliderAspect)
+            view.removeConstraint(sizeSliderAspect)
+            view.removeConstraint(resetImageLeading)
+            view.removeConstraint(trashImageLeading)
+             
+            view.addConstraint(newDistanceConstraint)
+            view.addConstraint(newLengthConstraint)
+            view.addConstraint(newSizeConstraint)
+            view.addConstraint(newResetConstraint)
+            view.addConstraint(newTrashConstraint)
+             
+            view.layoutIfNeeded()
+             
+            distanceSliderAspect = newDistanceConstraint
+            lengthSliderAspect = newLengthConstraint
+            sizeSliderAspect = newSizeConstraint
+            resetImageLeading = newResetConstraint
+            trashImageLeading = newTrashConstraint
+        }
+    }
+    
     /// Toggles whether the frame's position is locked or not.
     func toggleFrameLock() {
         // toggle position lock
@@ -780,7 +864,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let cameraLocked = sceneController.toggleCameraLocked()
         
         if(cameraLocked) {
-            cameraLockImage.image = UIImage(systemName: "camera.circle.fill")
+            cameraLockImage.image = UIImage(systemName: "camera.viewfinder")
             startLockHelpBlink("Image orientation locked to camera")
         }
         else {
@@ -819,12 +903,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     func displayInfo() {
         let infoString = """
         \n--- Tips ---\n
-        1. Tap plus button to take or select an image to view in AR
+        Functions best in well-lit areas
+        \n
+        While on this screen you can:
+        1. Tap plus button to take or select an image to view in augmented reality
         2. Tap screen once to toggle UI
-        3. Tap screen twice to pick up image (if set)
+        3. Tap screen twice to pick up image (if image has been placed)
+        \n
+        After selecting an image you can:
+        1. Place and then view the image as a real life object in augmented reality using your iPhone's camera
+        2. Modify the width, height, length, and rotation of the image
+        3. Lock the image's position and orientation to assist in placing image
+        4. Select custom frame color
         \n
         \(appVersion)
-        Copyright © Sean McShane
+        © 2020 Sean McShane
         """
         
         let alert = UIAlertController(title: appTitle, message: infoString, preferredStyle: .alert)
