@@ -918,6 +918,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         \n
         \(appVersion)
         © 2020 Sean McShane
+        smcshane.com/arphotoview
         """
         
         let alert = UIAlertController(title: appTitle, message: infoString, preferredStyle: .alert)
