@@ -51,6 +51,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var infoImage: UIImageView!
     @IBOutlet weak var cameraLockImage: UIImageView!
     @IBOutlet weak var lockHelpLabel: UILabel!
+    
+    @IBOutlet weak var screenshotImage: UIImageView!
     @IBOutlet weak var distanceSliderAspect: NSLayoutConstraint!
     @IBOutlet weak var lengthSliderAspect: NSLayoutConstraint!
     @IBOutlet weak var sizeSliderAspect: NSLayoutConstraint!
@@ -89,6 +91,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     var colorStartPoint = CGPoint()
     var colorGestureFailed = false
+    
+    var screenshotImageStartPoint = CGPoint()
+    var screenshotImageGestureFailed = false
     
     // misc vars
     
@@ -130,10 +135,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
 
     // app info used for info button
     let appTitle = "ARPhotoView"
-    let appVersion = "Arnolfini 1.0"
+    let appVersion = "Arnolfini 1.1.1"
     
     // meters to feet
     let mtof: Float = 3.28084
+    
+    // hide status bar (time, battery, signal)
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    /// hide home bar
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
+    }
     
     // MARK: - UIViewController
     
@@ -234,6 +249,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         infoImageLongPressRecognizer.name = "longPress"
         infoImageLongPressRecognizer.minimumPressDuration = 0
         infoImage.addGestureRecognizer(infoImageLongPressRecognizer)
+        
+        let screenshotImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.screenshotImageLongPressed))
+        screenshotImageLongPressRecognizer.name = "longPress"
+        screenshotImageLongPressRecognizer.minimumPressDuration = 0
+        screenshotImage.addGestureRecognizer(screenshotImageLongPressRecognizer)
         
         let addImageLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.addImageLongPressed))
         addImageLongPressRecognizer.name = "longPress"
@@ -400,6 +420,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
     
+    /// Takes a screenshot.
+    /// - Parameter recognizer: gesture recognizer triggered
+    @objc func screenshotImageLongPressed(_ sender: UILongPressGestureRecognizer) {
+        if(checkLongPress(sender, &screenshotImageGestureFailed, screenshotImage, &screenshotImageStartPoint, 175.0, true)) {
+            takeScreenshot()
+         }
+    }
+    
     /// Rotates frame right.
     /// - Parameter recognizer: gesture recognizer triggered
     @objc func rotateRightImageLongPressed(_ sender: UILongPressGestureRecognizer) {
@@ -453,8 +481,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @objc func resetImageLongPressed(_ sender: UILongPressGestureRecognizer) {
         if(checkLongPress(sender, &resetImageGestureFailed, resetImage, &resetImageStartPoint, 175.0, true)) {
             if(!lockHelpBlinking) {
-                setDefaults()
                 startLockHelpBlink("Reset to default")
+                setDefaults()
             }
          }
     }
@@ -575,6 +603,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         trashImage.isHidden = true
         resetImage.isHidden = true
         infoImage.isHidden = false
+        screenshotImage.isHidden = false
         isUIHidden = false
         cameraLockImage.isHidden = true
     }
@@ -605,6 +634,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         trashImage.isHidden = false
         resetImage.isHidden = false
         infoImage.isHidden = true
+        screenshotImage.isHidden = true
         isUIHidden = true
         cameraLockImage.isHidden = false
         
@@ -691,7 +721,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 sizeSlider.state == .normal &&
                 lengthSlider.state == .normal
     }
-
+    
+    /// Take screenshot of AR scene and prompt for save/delete
+    func takeScreenshot() {
+        let image = sceneView.snapshot()
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let screenshotView = (storyboard.instantiateViewController(withIdentifier: "ScreenshotView") as! ScreenshotViewController)
+        
+        self.present(screenshotView, animated: true)
+        
+        screenshotView.setScreenshotImage(image)
+    }
+    
     // MARK: - misc UI update methods
     
     /// Set editor UI to default settings.
@@ -723,6 +765,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         addImage.isHidden = isUIHidden
         infoImage.isHidden = isUIHidden
+        screenshotImage.isHidden = isUIHidden
     }
     
     /// Displays the image selection menu.
@@ -767,7 +810,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             
             if(UIImagePickerController.isSourceTypeAvailable(.photoLibrary)) {
                 self.imagePicker.delegate = self
-                self.imagePicker.sourceType = .savedPhotosAlbum
+                self.imagePicker.sourceType = .photoLibrary
                 self.imagePicker.allowsEditing = false
                 
                 self.present(self.imagePicker, animated: true, completion: nil)
@@ -906,15 +949,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         Functions best in well-lit areas
         \n
         While on this screen you can:
-        1. Tap plus button to take or select an image to view in augmented reality
-        2. Tap screen once to toggle UI
-        3. Tap screen twice to pick up image (if image has been placed)
+        1. Tap the plus button to take or select an image to view in augmented reality
+        2. Tap the screen once to toggle the UI
+        3. Tap the screen twice to pick up image (if image has been placed)
         \n
-        After selecting an image you can:
-        1. Place and then view the image as a real life object in augmented reality using your iPhone's camera
-        2. Modify the width, height, length, and rotation of the image
-        3. Lock the image's position and orientation to assist in placing image
-        4. Select custom frame color
+        After selecting an image:
+        1. Use the sliders and buttons on the screen to modify the width, height, length, and rotation of the image
+        2. Tap the screen to place the image in the augmented reality world which you view through your iPhone's camera
         \n
         \(appVersion)
         © 2020 Sean McShane
@@ -922,6 +963,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         """
         
         let alert = UIAlertController(title: appTitle, message: infoString, preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "smcshane.com/arphotoview", style: .default, handler: {
+            action in
+            
+            UIApplication.shared.open(URL(string: "https://www.smcshane.com/arphotoview")!) { success in
+                
+            }
+        }))
+
+        
         
         alert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: nil))
         
