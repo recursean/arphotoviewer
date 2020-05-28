@@ -360,7 +360,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         // grab the selected image
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            updateConstraints()
             sceneController.setImage(image.fixOrientation())
             sceneController.addFrame()
             setDefaults()
@@ -400,6 +399,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @objc func didDoubleTapScreen(recognizer: UITapGestureRecognizer) {
         if(didInitializeScene && frameSet) {
             impact.impactOccurred()
+
             prepareForFrame()
         }
     }
@@ -638,6 +638,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         isUIHidden = true
         cameraLockImage.isHidden = false
         
+        updateConstraints()
         startBlinkTimer()
     }
     
