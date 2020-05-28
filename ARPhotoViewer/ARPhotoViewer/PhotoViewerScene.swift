@@ -47,7 +47,7 @@ class PhotoViewerScene {
     
     /// Creates the inital frame and scene object.
     init() {
-        frame = SCNBox(width: 0.3048, height: 0.6096, length: 0.05, chamferRadius: 0.0)
+        frame = SCNBox(width: 0.3048, height: 0.6096, length: 0.005, chamferRadius: 0.0)
         frameContainer = SCNNode(geometry: frame)
         
         scene = self.initializeScene()

@@ -952,6 +952,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         1. Tap the plus button to take or select an image to view in augmented reality
         2. Tap the screen once to toggle the UI
         3. Tap the screen twice to pick up image (if image has been placed)
+        4. Tap the camera button to take a screenshot of the augmented reality view
         \n
         After selecting an image:
         1. Use the sliders and buttons on the screen to modify the width, height, length, and rotation of the image

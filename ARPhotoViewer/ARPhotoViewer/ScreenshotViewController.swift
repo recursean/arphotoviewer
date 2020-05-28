@@ -25,13 +25,13 @@ class ScreenshotViewController: UIViewController {
     }
     
     /// Discard screenshot
-    /// - Parameter sender: <#sender description#>
+    /// - Parameter sender: sender description
     @IBAction func deleteButtonTapped(_ sender: Any) {
         dismiss(animated: true)
     }
     
     /// Save screenshot to photo library
-    /// - Parameter sender: <#sender description#>
+    /// - Parameter sender: sender description
     @IBAction func saveButtonTapped(_ sender: Any) {
         UIImageWriteToSavedPhotosAlbum(screenshotImage!.image!, nil, nil, nil)
         

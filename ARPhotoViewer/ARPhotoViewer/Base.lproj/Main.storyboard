@@ -113,7 +113,7 @@
                                 <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.050000000000000003" minValue="0.050000000000000003" maxValue="2" minimumValueImage="minus.circle.fill" catalog="system" maximumValueImage="plus.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="gs9-Yc-TBJ">
+                            <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.050000000000000003" minValue="0.0050000000000000001" maxValue="2" minimumValueImage="minus.circle.fill" catalog="system" maximumValueImage="plus.circle.fill" translatesAutoresizingMaskIntoConstraints="NO" id="gs9-Yc-TBJ">
                                 <rect key="frame" x="-206" y="433" width="452" height="31"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="minimumTrackTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -403,7 +403,7 @@
         <!--Screenshot View Controller-->
         <scene sceneID="yAn-bd-506">
             <objects>
-                <viewController storyboardIdentifier="ScreenshotView" modalPresentationStyle="currentContext" id="U3g-SU-8VZ" customClass="ScreenshotViewController" customModule="ARPhotoView" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScreenshotView" modalPresentationStyle="overCurrentContext" id="U3g-SU-8VZ" customClass="ScreenshotViewController" customModule="ARPhotoView" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9bd-Ez-Esc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
