@@ -51,8 +51,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var infoImage: UIImageView!
     @IBOutlet weak var cameraLockImage: UIImageView!
     @IBOutlet weak var lockHelpLabel: UILabel!
-    
     @IBOutlet weak var screenshotImage: UIImageView!
+    @IBOutlet weak var planeDetectionStack: UIStackView!
+    @IBOutlet weak var planeDetectionSwitch: UISwitch!
+    
     @IBOutlet weak var distanceSliderAspect: NSLayoutConstraint!
     @IBOutlet weak var lengthSliderAspect: NSLayoutConstraint!
     @IBOutlet weak var sizeSliderAspect: NSLayoutConstraint!
@@ -132,10 +134,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     
     // used to store the selected color view from color picker
     var selectedColorView: UIView?
+    
+    /// flag used to tell if the scene is currently using plane detection or not
+    var planeDetectionSet: Bool = false
 
     // app info used for info button
     let appTitle = "ARPhotoView"
-    let appVersion = "Arnolfini 1.1.1"
+    let appVersion = "Arnolfini 1.2.1"
     
     // meters to feet
     let mtof: Float = 3.28084
@@ -169,6 +174,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             //sceneView.debugOptions.insert(.showWorldOrigin)
         }
         
+        // Prevent the screen from being dimmed after a while as users will likely
+        // have long periods of interaction without touching the screen or buttons.
+        UIApplication.shared.isIdleTimerDisabled = true
+        
         // make numbers format to 2 sig figs
         numFmt.numberStyle = .decimal
         numFmt.maximumSignificantDigits = 2
@@ -195,17 +204,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         
         distanceSliderAspectLandscape = distanceSliderAspect.constraintWithMultiplier(0.8)
         
-        // create a session configuration
-        let config = ARWorldTrackingConfiguration()
-        
-        // enable plane detection
-        //config.planeDetection = [.horizontal, .vertical]
-
-        // check to see if people occlusion is supported
-        if(ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth)) {
-            // enable people occlusion
-            config.frameSemantics.insert(.personSegmentationWithDepth)
-        }
+        let config = createARConfig(false)
         
         // run the view's session
         sceneView.session.run(config)
@@ -301,51 +300,149 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         resetImage.addGestureRecognizer(resetImageLongPressRecognizer)
     }
     
+    /// Creates a new ARWorldTrackingConfiguration object with/without plane detection
+    /// - Parameter planeDetection: flag to enable/disable plane detection in config
+    /// - Returns: new ARWorldTrackingConfiguration object to be run
+    func createARConfig(_ planeDetection: Bool) -> ARWorldTrackingConfiguration {
+        // create a session configuration
+        let config = ARWorldTrackingConfiguration()
+        
+        if(planeDetection) {
+            // enable plane detection
+            config.planeDetection = [.horizontal, .vertical]
+            
+//            if #available(iOS 13.4, *) {
+//                config.sceneReconstruction = .mesh
+//            }
+//            else {
+//                // Fallback on earlier versions
+//            }
+        }
+        
+        else {
+            // disable plane detection
+            config.planeDetection = []
+        }
+        
+        // check to see if people occlusion is supported
+        if(ARWorldTrackingConfiguration.supportsFrameSemantics(.personSegmentationWithDepth)) {
+            // enable people occlusion
+            config.frameSemantics.insert(.personSegmentationWithDepth)
+        }
+        
+        // check to see if enough of the real world has been mapped into AR scene
+//            if(sceneView.session.currentFrame?.worldMappingStatus == ARFrame.WorldMappingStatus.mapped) {
+//                // get the current map and use it as initial map of new config
+//                sceneView.session.getCurrentWorldMap { (map, err) in
+//                    if(map != nil) {
+//                        config.initialWorldMap = map
+//                    }
+//                }
+//            }
+
+        return config
+    }
+    
     // MARK: - Delegate methods
     
     // MARK: - ARSCNViewDelegate
     
     /// Called every frame. Updates frame position if not set.
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        // check to see if the scene is ready to interact with
-        if(!didInitializeScene) {
-            if(sceneView.session.currentFrame?.camera != nil) {
-                didInitializeScene = true
+        if(!planeDetectionSet) {
+            // check to see if the scene is ready to interact with
+            if(!didInitializeScene) {
+                if(sceneView.session.currentFrame?.camera != nil) {
+                    didInitializeScene = true
+                }
             }
-        }
-        
-        // update the position of the frame every frame if frame is in edit UI
-        if(didInitializeScene){
-            if(showFrame && !frameSet){
-                if let camera = sceneView.session.currentFrame?.camera {
-                    
-                    // calulate where the frame should be based off camera and zFrameOffset
-                    var translation = matrix_identity_float4x4
-                    translation.columns.3.z = zFrameOffset
-
-                    let transform = camera.transform * translation
-                    let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-
-                    // update position of the frame
-                    sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
-                    
-                    // calculate distance between frame and camera if frame is locked while editing
-                    if(sceneController.isFrameLocked()) {
-                        let node1Pos = SCNVector3ToGLKVector3(SCNVector3(camera.transform.columns.3.x, camera.transform.columns.3.y, camera.transform.columns.3.z))
-                        let node2Pos = SCNVector3ToGLKVector3(sceneController.getFramePosition())
-
-                        let distance = GLKVector3Distance(node1Pos, node2Pos)
+            
+            // update the position of the frame every frame if frame is in edit UI
+            if(didInitializeScene){
+                if(showFrame && !frameSet){
+                    if let camera = sceneView.session.currentFrame?.camera {
                         
-                        // run as main thread; can't update UI elements as background thread
-                        DispatchQueue.main.async {
-                            self.zFrameOffset = -1.0 * distance
-                            self.distanceSlider.value = distance
-                            self.updateDistanceLabel(distance)
+                        // calulate where the frame should be based off camera and zFrameOffset
+                        var translation = matrix_identity_float4x4
+                        translation.columns.3.z = zFrameOffset
+
+                        let transform = camera.transform * translation
+                        let position = SCNVector3(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+
+                        // update position of the frame
+                        sceneController.updateFramePosition(position: position, sceneView.pointOfView!)
+                        
+                        // calculate distance between frame and camera if frame is locked while editing
+                        if(sceneController.isFrameLocked()) {
+                            let node1Pos = SCNVector3ToGLKVector3(SCNVector3(camera.transform.columns.3.x, camera.transform.columns.3.y, camera.transform.columns.3.z))
+                            let node2Pos = SCNVector3ToGLKVector3(sceneController.getFramePosition())
+
+                            let distance = GLKVector3Distance(node1Pos, node2Pos)
+                            
+                            // run as main thread; can't update UI elements as background thread
+                            DispatchQueue.main.async {
+                                self.zFrameOffset = -1.0 * distance
+                                self.distanceSlider.value = distance
+                                self.updateDistanceLabel(distance)
+                            }
                         }
                     }
-                } 
+                }
             }
         }
+    }
+    
+    /// - Tag: PlaceARContent
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        if(planeDetectionSet) {
+            // Place content only for anchors found by plane detection.
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+            
+            // Create a custom object to visualize the plane geometry and extent.
+            let plane = Plane(anchor: planeAnchor, in: sceneView)
+            
+            // Add the visualization to the ARKit-managed node so that it tracks
+            // changes in the plane anchor as plane estimation continues.
+            node.addChildNode(plane)
+        }
+    }
+    
+    /// - Tag: UpdateARContent
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        if(planeDetectionSet) {
+            // Update only anchors and nodes set up by `renderer(_:didAdd:for:)`.
+            guard let planeAnchor = anchor as? ARPlaneAnchor,
+                let plane = node.childNodes.first as? Plane
+                else { return }
+            
+            // Update ARSCNPlaneGeometry to the anchor's new estimated shape.
+            if let planeGeometry = plane.meshNode.geometry as? ARSCNPlaneGeometry {
+                planeGeometry.update(from: planeAnchor.geometry)
+            }
+
+            // Update extent visualization to the anchor's new bounding rectangle.
+            if let extentGeometry = plane.extentNode.geometry as? SCNPlane {
+                extentGeometry.width = CGFloat(planeAnchor.extent.x)
+                extentGeometry.height = CGFloat(planeAnchor.extent.z)
+                plane.extentNode.simdPosition = planeAnchor.center
+            }
+        }
+    }
+    
+    // MARK: - ARSessionDelegate
+
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        guard let frame = session.currentFrame else { return }
+        //updateSessionInfoLabel(for: frame, trackingState: frame.camera.trackingState)
+    }
+
+    func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
+        guard let frame = session.currentFrame else { return }
+        //updateSessionInfoLabel(for: frame, trackingState: frame.camera.trackingState)
+    }
+
+    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
+        //updateSessionInfoLabel(for: session.currentFrame!, trackingState: camera.trackingState)
     }
     
     // MARK: - UIImagePickerControllerDelegate
@@ -560,9 +657,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         updateDistanceLabel(distanceSlider.value)
     }
     
-    /**
-     Called when the switch for show image on all sides is tapped. Updates frame's materials.
-     */
+    
+    /// Called when the switch for show image on all sides is tapped. Updates frame's materials.
+    /// - Parameter sender: sender description
     @IBAction func allSidesSwitchValueChanged(_ sender: UISwitch) {
         sceneController.toggleAllSides(allSidesSwitch.isOn)
         
@@ -574,6 +671,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
             colorPickerButtonView.isHidden = false
             colorPickerStack.isHidden = true
         }
+    }
+    
+    /// Called when switch for plane detection is tapped.
+    /// - Parameter sender: sender description
+    @IBAction func planeDetectionSwitchValueChanged(_ sender: UISwitch) {
+        togglePlaneDetection(planeDetectionSwitch.isOn)
     }
     
     // MARK: - prepare for frame state change functions
@@ -598,6 +701,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         distanceHelpLabel.isHidden = true
         lengthHelpLabel.isHidden = true
         allSidesStack.isHidden = true
+        planeDetectionStack.isHidden = true
         colorPickerButtonView.isHidden = true
         colorPickerStack.isHidden = true
         trashImage.isHidden = true
@@ -627,6 +731,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         distanceHelpLabel.isHidden = false
         lengthHelpLabel.isHidden = false
         allSidesStack.isHidden = false
+        planeDetectionStack.isHidden = false
         if(!allSidesSwitch.isOn) {
             colorPickerButtonView.isHidden = false
         }
@@ -917,6 +1022,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         }
     }
     
+    /// Turns on/off plane detection within AR scene
+    /// - Parameter detectPlanes: flag whether to turn on or off
+    func togglePlaneDetection(_ detectPlanes: Bool) {
+        let config = createARConfig(detectPlanes)
+        
+        sceneView.session.run(config)
+        
+        planeDetectionSet = detectPlanes
+    }
+    
     /// Set the sliders to correct positions.
     func setSliderValues() {
         let dims = sceneController.getFrameDimensions()
@@ -992,6 +1107,39 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         let dims = sceneController.getFrameDimensions()
         
         sizeLabel.text! = "\(numFmt.string(from: NSNumber(value: Float(dims[0]) * mtof))!)ft w X \(numFmt.string(from: NSNumber(value: Float(dims[1]) * mtof))!)ft h X \(numFmt.string(from: NSNumber(value: Float(dims[2]) * mtof))!)ft l"
+    }
+    
+    /// Update the help label for plane detection status
+    /// - Parameters:
+    ///   - frame: current frame
+    ///   - trackingState: state of AR world tracking
+    func updateSessionInfoLabel(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
+        // Update the UI to provide feedback on the state of the AR experience.
+        let message: String
+
+        switch trackingState {
+        case .normal where frame.anchors.isEmpty:
+            // No planes detected; provide instructions for this app's AR interactions.
+            message = "Move the device around to detect horizontal and vertical surfaces."
+            
+        case .notAvailable:
+            message = "Tracking unavailable."
+            
+        case .limited(.excessiveMotion):
+            message = "Tracking limited - Move the device more slowly."
+            
+        case .limited(.insufficientFeatures):
+            message = "Tracking limited - Point the device at an area with visible surface detail, or improve lighting conditions."
+            
+        case .limited(.initializing):
+            message = "Initializing AR session."
+            
+        default:
+            // No feedback needed when tracking is normal and planes are visible.
+            // (Nor when in unreachable limited-tracking states.)
+            message = ""
+
+        }
     }
     
     // MARK: - blinking help label methods

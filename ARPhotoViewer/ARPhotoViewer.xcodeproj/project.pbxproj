@@ -18,6 +18,7 @@
 		DD2B0375245F9C16002F9FA8 /* SCNNode+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */; };
 		DD439F38247ABDAC006E48D9 /* logo3.png in Resources */ = {isa = PBXBuildFile; fileRef = DD439F37247ABDAC006E48D9 /* logo3.png */; };
 		DD9B6F9E247F4AE300D47470 /* ScreenshotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD9B6F9D247F4AE300D47470 /* ScreenshotViewController.swift */; };
+		DDA625D82488982F005F716A /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDA625D72488982F005F716A /* Plane.swift */; };
 		DDD3A2412460D8C500157434 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		DD2B0374245F9C16002F9FA8 /* SCNNode+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Extensions.swift"; sourceTree = "<group>"; };
 		DD439F37247ABDAC006E48D9 /* logo3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo3.png; sourceTree = "<group>"; };
 		DD9B6F9D247F4AE300D47470 /* ScreenshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotViewController.swift; sourceTree = "<group>"; };
+		DDA625D72488982F005F716A /* Plane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,6 +80,7 @@
 				DD2B0371245F98F4002F9FA8 /* PhotoViewerScene.swift */,
 				DD2B0361245F97C6002F9FA8 /* ViewController.swift */,
 				DD9B6F9D247F4AE300D47470 /* ScreenshotViewController.swift */,
+				DDA625D72488982F005F716A /* Plane.swift */,
 				DD439F37247ABDAC006E48D9 /* logo3.png */,
 			);
 			path = ARPhotoViewer;
@@ -172,6 +175,7 @@
 				DDD3A2412460D8C500157434 /* UIImage+Extensions.swift in Sources */,
 				DD9B6F9E247F4AE300D47470 /* ScreenshotViewController.swift in Sources */,
 				DD2B035E245F97C6002F9FA8 /* AppDelegate.swift in Sources */,
+				DDA625D82488982F005F716A /* Plane.swift in Sources */,
 				DD2B0372245F98F4002F9FA8 /* PhotoViewerScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -325,7 +329,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.smcshane.arphotoview;
 				PRODUCT_NAME = ARPhotoView;
 				SWIFT_VERSION = 5.0;
@@ -346,7 +350,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.smcshane.arphotoview;
 				PRODUCT_NAME = ARPhotoView;
 				SWIFT_VERSION = 5.0;
