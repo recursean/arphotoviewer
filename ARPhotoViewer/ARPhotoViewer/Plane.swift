@@ -10,17 +10,17 @@ import ARKit
 
 class Plane: SCNNode {
     
-    let meshNode: SCNNode
+    //let meshNode: SCNNode
     let extentNode: SCNNode
     
     /// - Tag: VisualizePlane
     init(anchor: ARPlaneAnchor, in sceneView: ARSCNView) {
 
         // Create a mesh to visualize the estimated shape of the plane.
-        guard let meshGeometry = ARSCNPlaneGeometry(device: sceneView.device!)
-            else { fatalError("Can't create plane geometry") }
-        meshGeometry.update(from: anchor.geometry)
-        meshNode = SCNNode(geometry: meshGeometry)
+//        guard let meshGeometry = ARSCNPlaneGeometry(device: sceneView.device!)
+//            else { fatalError("Can't create plane geometry") }
+//        meshGeometry.update(from: anchor.geometry)
+//        meshNode = SCNNode(geometry: meshGeometry)
         
         // Create a node to visualize the plane's bounding rectangle.
         let extentPlane: SCNPlane = SCNPlane(width: CGFloat(anchor.extent.x), height: CGFloat(anchor.extent.z))
@@ -33,11 +33,11 @@ class Plane: SCNNode {
 
         super.init()
 
-        self.setupMeshVisualStyle()
+        //self.setupMeshVisualStyle()
         self.setupExtentVisualStyle()
 
         // Add the plane extent and plane geometry as child nodes so they appear in the scene.
-        addChildNode(meshNode)
+        //addChildNode(meshNode)
         addChildNode(extentNode)
     }
     
@@ -45,19 +45,19 @@ class Plane: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupMeshVisualStyle() {
-        // Make the plane visualization semitransparent to clearly show real-world placement.
-        meshNode.opacity = 0.25
-
-        // Use color and blend mode to make planes stand out.
-        guard let material = meshNode.geometry?.firstMaterial
-            else { fatalError("ARSCNPlaneGeometry always has one material") }
-        material.diffuse.contents = UIColor.orange
-    }
+//    private func setupMeshVisualStyle() {
+//        // Make the plane visualization semitransparent to clearly show real-world placement.
+//        meshNode.opacity = 0.25
+//
+//        // Use color and blend mode to make planes stand out.
+//        guard let material = meshNode.geometry?.firstMaterial
+//            else { fatalError("ARSCNPlaneGeometry always has one material") }
+//        material.diffuse.contents = UIColor.orange
+//    }
     
     private func setupExtentVisualStyle() {
         // Make the extent visualization semitransparent to clearly show real-world placement.
-        extentNode.opacity = 0.6
+        extentNode.opacity = 0.25
 
         guard let material = extentNode.geometry?.firstMaterial
             else { fatalError("SCNPlane always has one material") }
@@ -65,13 +65,13 @@ class Plane: SCNNode {
         material.diffuse.contents = UIColor.orange
 
         // Use a SceneKit shader modifier to render only the borders of the plane.
-        guard let path = Bundle.main.path(forResource: "wireframe_shader", ofType: "metal", inDirectory: "art.scnassets")
-            else { fatalError("Can't find wireframe shader") }
-        do {
-            let shader = try String(contentsOfFile: path, encoding: .utf8)
-            material.shaderModifiers = [.surface: shader]
-        } catch {
-            fatalError("Can't load wireframe shader: \(error)")
-        }
+//        guard let path = Bundle.main.path(forResource: "PlaneShader", ofType: "metal", inDirectory: "art.scnassets")
+//            else { fatalError("Can't find wireframe shader") }
+//        do {
+//            let shader = try String(contentsOfFile: path, encoding: .utf8)
+//            material.shaderModifiers = [.surface: shader]
+//        } catch {
+//            fatalError("Can't load wireframe shader: \(error)")
+//        }
     }
 }

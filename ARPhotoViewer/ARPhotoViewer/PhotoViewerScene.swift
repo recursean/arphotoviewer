@@ -45,6 +45,9 @@ class PhotoViewerScene {
     // meters to feet
     let mtof: Float = 3.28084
     
+    /// flag to record if frame is showing image on all sides or not
+    var showAllSides = true
+    
     /// Creates the inital frame and scene object.
     init() {
         frame = SCNBox(width: 0.3048, height: 0.6096, length: 0.005, chamferRadius: 0.0)
@@ -161,6 +164,8 @@ class PhotoViewerScene {
     /// Set the texture for each of the 6 sides of frame.
     /// - Parameter showAllSides: whether to show image on all sides or not
     func setMaterials(_ showAllSides: Bool) {
+        self.showAllSides = showAllSides
+        
         if(showAllSides) {
             frame!.materials = [
                                 imageMaterial,
@@ -197,6 +202,20 @@ class PhotoViewerScene {
         frameContainer!.removeFromParentNode()
     }
     
+    /// Hides/shows the frame
+    /// - Parameter hidden: flag to control hide frame or not
+    func toggleFrameHidden(_ hidden: Bool) {
+        if(hidden) {
+            imageMaterial.diffuse.contents = UIColor.clear
+            setMaterials(true)
+        }
+        
+        else {
+            imageMaterial.diffuse.contents = self.image
+            setMaterials(showAllSides)
+        }
+    }
+    
     // MARK: - misc methods
     
     /// Set back to default frame size and length.
@@ -215,7 +234,7 @@ class PhotoViewerScene {
         aspect = Float(image.size.height / image.size.width)
         
         imageMaterial.diffuse.contents = self.image
-        
+
         setMaterials(true)
     }
     

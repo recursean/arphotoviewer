@@ -37,6 +37,7 @@
 		DD439F37247ABDAC006E48D9 /* logo3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo3.png; sourceTree = "<group>"; };
 		DD9B6F9D247F4AE300D47470 /* ScreenshotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotViewController.swift; sourceTree = "<group>"; };
 		DDA625D72488982F005F716A /* Plane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
+		DDA625DD2489CBF1005F716A /* Assets.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Assets.scnassets; sourceTree = "<group>"; };
 		DDD3A2402460D8C500157434 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +73,7 @@
 			children = (
 				DD2B0373245F9C04002F9FA8 /* Extensions */,
 				DD2B035F245F97C6002F9FA8 /* art.scnassets */,
+				DDA625DD2489CBF1005F716A /* Assets.scnassets */,
 				DD2B0366245F97C9002F9FA8 /* Assets.xcassets */,
 				DD2B036B245F97C9002F9FA8 /* Info.plist */,
 				DD2B0368245F97C9002F9FA8 /* LaunchScreen.storyboard */,

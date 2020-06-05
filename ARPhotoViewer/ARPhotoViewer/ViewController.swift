@@ -54,6 +54,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @IBOutlet weak var screenshotImage: UIImageView!
     @IBOutlet weak var planeDetectionStack: UIStackView!
     @IBOutlet weak var planeDetectionSwitch: UISwitch!
+    @IBOutlet weak var worldTrackingHelpView: UIView!
+    @IBOutlet weak var worldTrackingHelpLabel: UILabel!
     
     @IBOutlet weak var distanceSliderAspect: NSLayoutConstraint!
     @IBOutlet weak var lengthSliderAspect: NSLayoutConstraint!
@@ -416,9 +418,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                 else { return }
             
             // Update ARSCNPlaneGeometry to the anchor's new estimated shape.
-            if let planeGeometry = plane.meshNode.geometry as? ARSCNPlaneGeometry {
-                planeGeometry.update(from: planeAnchor.geometry)
-            }
+//            if let planeGeometry = plane.meshNode.geometry as? ARSCNPlaneGeometry {
+//                planeGeometry.update(from: planeAnchor.geometry)
+//            }
 
             // Update extent visualization to the anchor's new bounding rectangle.
             if let extentGeometry = plane.extentNode.geometry as? SCNPlane {
@@ -433,16 +435,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
 
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
         guard let frame = session.currentFrame else { return }
-        //updateSessionInfoLabel(for: frame, trackingState: frame.camera.trackingState)
+        updateWorldTrackingHelpLabel(for: frame, trackingState: frame.camera.trackingState)
     }
 
     func session(_ session: ARSession, didRemove anchors: [ARAnchor]) {
         guard let frame = session.currentFrame else { return }
-        //updateSessionInfoLabel(for: frame, trackingState: frame.camera.trackingState)
+        updateWorldTrackingHelpLabel(for: frame, trackingState: frame.camera.trackingState)
     }
 
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
-        //updateSessionInfoLabel(for: session.currentFrame!, trackingState: camera.trackingState)
+        updateWorldTrackingHelpLabel(for: session.currentFrame!, trackingState: camera.trackingState)
     }
     
     // MARK: - UIImagePickerControllerDelegate
@@ -471,7 +473,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     @objc func didTapScreen(recognizer: UITapGestureRecognizer) {
         if(didInitializeScene) {
             if(isSafeToPlace()) {
-                if(showFrame && !frameSet) {
+                if(showFrame && !frameSet && !planeDetectionSet) {
                     if let camera = sceneView.session.currentFrame?.camera {
                         var translation = matrix_identity_float4x4
                         translation.columns.3.z = zFrameOffset
@@ -484,7 +486,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
                         prepareForSet()
                     }
                 }
-                else {
+                    
+                else if(planeDetectionSet) {
+                    let hitTest = sceneView.hitTest(recognizer.location(in: sceneView), options: nil)
+                    
+                    if(!hitTest.isEmpty) {
+                        let tappedPlaneNode = hitTest.first!.node
+                        tappedPlaneNode.geometry?.firstMaterial?.diffuse.contents = UIColor.systemPink
+                    }
+                }
+                    
+                else if(!showFrame) {
                     toggleUI()
                 }
             }
@@ -689,7 +701,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         showFrame = false
         distanceLabel.isHidden = true
         distanceSlider.isHidden = true
-        addImage.isHidden = false
         sizeSlider.isHidden = true
         lengthSlider.isHidden = true
         sizeLabel.isHidden = true
@@ -706,10 +717,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         colorPickerStack.isHidden = true
         trashImage.isHidden = true
         resetImage.isHidden = true
+        cameraLockImage.isHidden = true
+        addImage.isHidden = false
         infoImage.isHidden = false
         screenshotImage.isHidden = false
         isUIHidden = false
-        cameraLockImage.isHidden = true
     }
     /**
      Set flags before frame begins to follow camera after double tap
@@ -1030,6 +1042,34 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
         sceneView.session.run(config)
         
         planeDetectionSet = detectPlanes
+        
+        if(detectPlanes) {
+            tapToPlaceLabel.text = "Tap to select a surface"
+        }
+            
+        else {
+            tapToPlaceLabel.text = "Tap to place"
+        }
+        
+        sceneController.toggleFrameHidden(detectPlanes)
+        
+        distanceLabel.isHidden = detectPlanes
+        distanceSlider.isHidden = detectPlanes
+        sizeSlider.isHidden = detectPlanes
+        lengthSlider.isHidden = detectPlanes
+        sizeLabel.isHidden = detectPlanes
+        rotateRightImage.isHidden = detectPlanes
+        rotateLeftImage.isHidden = detectPlanes
+        lockImage.isHidden = detectPlanes
+        sizeHelpLabel.isHidden = detectPlanes
+        distanceHelpLabel.isHidden = detectPlanes
+        lengthHelpLabel.isHidden = detectPlanes
+        allSidesStack.isHidden = detectPlanes
+        colorPickerButtonView.isHidden = detectPlanes
+        colorPickerStack.isHidden = true
+        trashImage.isHidden = detectPlanes
+        resetImage.isHidden = detectPlanes
+        cameraLockImage.isHidden = detectPlanes
     }
     
     /// Set the sliders to correct positions.
@@ -1113,33 +1153,60 @@ class ViewController: UIViewController, ARSCNViewDelegate, UIImagePickerControll
     /// - Parameters:
     ///   - frame: current frame
     ///   - trackingState: state of AR world tracking
-    func updateSessionInfoLabel(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
+    func updateWorldTrackingHelpLabel(for frame: ARFrame, trackingState: ARCamera.TrackingState) {
         // Update the UI to provide feedback on the state of the AR experience.
         let message: String
 
         switch trackingState {
         case .normal where frame.anchors.isEmpty:
-            // No planes detected; provide instructions for this app's AR interactions.
-            message = "Move the device around to detect horizontal and vertical surfaces."
-            
+            if(planeDetectionSet) {
+                worldTrackingHelpView.isHidden = false
+                
+                // No planes detected; provide instructions for this app's AR interactions.
+                message = "Move the device around to detect horizontal and vertical surfaces."
+            }
+                
+            else {
+                worldTrackingHelpView.isHidden = true
+                
+                message = ""
+            }
+
         case .notAvailable:
+            worldTrackingHelpView.isHidden = false
+            
             message = "Tracking unavailable."
             
         case .limited(.excessiveMotion):
-            message = "Tracking limited - Move the device more slowly."
+            worldTrackingHelpView.isHidden = false
+            
+            message = "Move the device more slowly."
             
         case .limited(.insufficientFeatures):
-            message = "Tracking limited - Point the device at an area with visible surface detail, or improve lighting conditions."
+            worldTrackingHelpView.isHidden = false
+            
+            if(planeDetectionSet) {
+                message = "Point the device at an area with visible surface detail, or improve lighting conditions."
+            }
+                
+            else {
+                message = "Improve lighting conditions"
+            }
             
         case .limited(.initializing):
+            worldTrackingHelpView.isHidden = false
+            
             message = "Initializing AR session."
             
         default:
             // No feedback needed when tracking is normal and planes are visible.
             // (Nor when in unreachable limited-tracking states.)
+            worldTrackingHelpView.isHidden = true
+            
             message = ""
-
         }
+        
+        worldTrackingHelpLabel.text = message
     }
     
     // MARK: - blinking help label methods
